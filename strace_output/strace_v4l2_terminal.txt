@@ -1,0 +1,68 @@
+rock@rock-5b:~$ strace -e trace=openat,ioctl   -o strace_v4l2.txt   v4l2-ctl -d /dev/video4 --all
+Driver Info:
+	Driver name      : hantro-vpu
+	Card type        : rockchip,rk3588-av1-vpu-dec
+	Bus info         : platform:fdc70000.video-codec
+	Driver version   : 6.12.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : hantro-vpu
+	Model            : hantro-vpu
+	Serial           : 
+	Bus info         : platform:fdc70000.video-codec
+	Media version    : 6.12.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 6.12.0
+Interface Info:
+	ID               : 0x0300000c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000001 (1)
+	Name             : rockchip,rk3588-av1-vpu-dec-source
+	Function         : V4L2 I/O
+	Pad 0x01000002   : 0: Source
+	  Link 0x02000008: to remote pad 0x1000004 of entity 'rockchip,rk3588-av1-vpu-dec-proc' (Video Decoder
+): Data, Enabled, Immutable
+Priority: 2
+Format Video Capture Multiplanar:
+	Width/Height      : 64/64
+	Pixel Format      : 'VT12' (Y/UV 4:2:0 (4x4 Linear))
+	Field             : None
+	Number of planes  : 1
+	Flags             : 
+	Colorspace        : JPEG
+	Transfer Function : Default
+	YCbCr/HSV Encoding: Default
+	Quantization      : Default
+	Plane 0           :
+	   Bytes per Line : 64
+	   Size Image     : 7424
+Format Video Output Multiplanar:
+	Width/Height      : 64/64
+	Pixel Format      : 'AV1F' (AV1 Frame)
+	Field             : None
+	Number of planes  : 1
+	Flags             : 
+	Colorspace        : JPEG
+	Transfer Function : Default
+	YCbCr/HSV Encoding: Default
+	Quantization      : Default
+	Plane 0           :
+	   Bytes per Line : 0
+	   Size Image     : 8192
+        av1_sequence_parameters 0x00a40af4 (unknown): type=280 value=unsupported payload type flags=has-payloa
+d
+           av1_tile_group_entry 0x00a40af5 (unknown): type=281 dims=[512] flags=has-payload, 0x00000800
+           av1_frame_parameters 0x00a40af6 (unknown): type=282 value=unsupported payload type flags=has-payloa
+d
+                 av1_film_grain 0x00a40af9 (unknown): type=283 value=unsupported payload type flags=has-payloa
+d
+

@@ -1,0 +1,218 @@
+ioctl(fd, VIDIOC_REQBUFS, p) {
+  v4l_reqbufs {
+    structs: {
+      v4l2_ioctl_ops
+      file
+      video_device
+      v4l2_requestbuffers
+    }
+
+    external: {
+      video_devdata {
+        structs: { file }
+        external: {
+          file_inode
+          iminor
+        }
+      }
+
+      check_fmt {
+        structs: {
+          file
+          video_device
+          v4l2_ioctl_ops
+        }
+        external: {
+          video_devdata
+        }
+      }
+
+      memset_after
+      is_valid_ioctl (macro)
+
+      hantro_ioctl_ops {
+        v4l2_m2m_ioctl_reqbufs {
+          structs: {
+            file
+            v4l2_fh
+          }
+
+          internal: {
+            v4l2_m2m_reqbufs {
+              structs: {
+                file
+                v4l2_m2m_ctx
+                v4l2_requestbuffers
+              }
+
+              internal: {
+                v4l2_m2m_get_vq {
+                  structs: {
+                    v4l2_m2m_queue_ctx
+                  }
+
+                  internal: {
+                    get_queue_ctx {
+                      structs: {
+                        v4l2_m2m_ctx
+                      }
+                    }
+                  }
+                }
+              }
+
+              external: {
+                vb2_reqbufs {
+                  structs: {
+                    vb2_queue
+                    v4l2_requestbuffers
+                  }
+
+                  internal: {
+                    vb2_set_flags_and_caps {
+                      structs: {
+                        vb2_queue
+                      }
+                    }
+                  }
+
+                  external: {
+                    vb2_core_reqbufs {
+                      driver: {
+                        queue_setup
+                      }
+
+                      internal: {
+                        vb2_get_num_buffers {
+                          external: { bitmap_weight }
+                        }
+
+                        verify_coherency_flags {
+                          calls: { dprintk }
+                        }
+
+                        dprintk (macro -> printk)
+
+                        __buffers_in_use {
+                          vb2_get_buffer {
+                            external: { test_bit }
+                          }
+                          vb2_buffer_in_use
+                        }
+
+                        __vb2_queue_cancel {
+                          driver: {
+                            stop_streaming
+                            unprepare_streaming
+                          }
+                          calls: {
+                            atomic_read
+                            vb2_get_buffer
+                            pr_warn
+                            vb2_buffer_done {
+                              calls: {
+                                vb2_state_name
+                                __vb2_buf_mem_finish
+                                list_add_tail
+                                atomic_dec
+                                media_request_object_unbind
+                                media_request_object_put
+                                spin_lock_irqsave
+                                spin_unlock_irqrestore
+                                trace_vb2_buf_done
+                                wake_up
+                              }
+                            }
+                            INIT_LIST_HEAD
+                            atomic_set
+                            wake_up_all
+                            spin_lock_irqsave
+                            spin_unlock_irqrestore
+                            __vb2_buf_mem_finish
+                            __vb2_dqbuf
+                          }
+                        }
+
+                        __vb2_queue_free {
+                          driver: { buf_cleanup }
+                          calls: {
+                            lockdep_assert_held
+                            vb2_get_buffer
+                            __vb2_free_mem
+                            vb2_queue_remove_buffer
+                            kfree
+                            vb2_get_num_buffers
+                            INIT_LIST_HEAD
+                          }
+                        }
+
+                        vb2_core_allocated_buffers_storage {
+                          external: {
+                            kcalloc
+                            sizeof
+                            bitmap_zalloc
+                            kfree
+                          }
+                        }
+
+                        set_queue_coherency {
+                          vb2_queue_allows_cache_hints
+                        }
+
+                        __vb2_queue_alloc {
+                          driver: { buf_init }
+                          calls: {
+                            min_t
+                            vb2_get_num_buffers
+                            bitmap_find_next_zero_area
+                            kzalloc
+                            dprintk
+                            init_buffer_cache_hints
+                            vb2_queue_add_buffer
+                            __vb2_buf_mem_alloc
+                            vb2_queue_remove_buffer
+                            kfree
+                            __setup_offsets
+                            __vb2_buf_mem_free
+                          }
+                        }
+
+                        vb2_core_free_buffers_storage {
+                          calls: {
+                            kfree
+                            bitmap_free
+                          }
+                        }
+                      }
+
+                      external: {
+                        mutex_lock
+                        mutex_unlock
+                        max_t
+                        min_t
+                        memset
+                        WARN_ON
+                      }
+                    }
+
+                    vb2_verify_memory_type {
+                      internal: {
+                        __verify_mmap_ops
+                        __verify_userptr_ops
+                        __verify_dmabuf_ops
+                        vb2_fileio_is_active
+                      }
+                      external: {
+                        dprintk
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

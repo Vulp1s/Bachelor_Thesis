@@ -1,0 +1,87 @@
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libv4l2.so.0", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libv4lconvert.so.0", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/aarch64-linux-gnu/libjpeg.so.62", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/sys/dev/char/81:4/uevent", O_RDONLY) = 3
+openat(AT_FDCWD, "/dev/video4", O_RDWR) = 3
+ioctl(3, VIDIOC_QUERYCAP, {driver="hantro-vpu", card="rockchip,rk3588-av1-vpu-dec", bus_info="platform:fdc70000.video-codec", version=KERNEL_VERSION(6, 12, 0), capabilities=V4L2_CAP_VIDEO_M2M_MPLANE|V4L2_CAP_EXT_PIX_FORMAT|V4L2_CAP_STREAMING|V4L2_CAP_DEVICE_CAPS, device_caps=V4L2_CAP_VIDEO_M2M_MPLANE|V4L2_CAP_EXT_PIX_FORMAT|V4L2_CAP_STREAMING}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|0 /* V4L2_CID_??? */ => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4, type=0x280 /* V4L2_CTRL_TYPE_??? */, name="AV1 Sequence Parameters", ...}) = 0
+ioctl(3, VIDIOC_TRY_EXT_CTRLS, {ctrl_class=0 /* V4L2_CTRL_CLASS_??? */, count=0}) = 0
+ioctl(3, VIDIOC_QUERYCTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|0 /* V4L2_CID_??? */}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0ae8) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_QUERYCAP, {driver="hantro-vpu", card="rockchip,rk3588-av1-vpu-dec", bus_info="platform:fdc70000.video-codec", version=KERNEL_VERSION(6, 12, 0), capabilities=V4L2_CAP_VIDEO_M2M_MPLANE|V4L2_CAP_EXT_PIX_FORMAT|V4L2_CAP_STREAMING|V4L2_CAP_DEVICE_CAPS, device_caps=V4L2_CAP_VIDEO_M2M_MPLANE|V4L2_CAP_EXT_PIX_FORMAT|V4L2_CAP_STREAMING}) = 0
+openat(AT_FDCWD, "/sys/dev/char/81:4/device", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4
+openat(AT_FDCWD, "/dev/media3", O_RDWR) = 5
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|0 /* V4L2_CID_??? */ => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4, type=0x280 /* V4L2_CTRL_TYPE_??? */, name="AV1 Sequence Parameters", ...}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|0 /* V4L2_CID_??? */ => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4, type=0x280 /* V4L2_CTRL_TYPE_??? */, name="AV1 Sequence Parameters", ...}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf5, type=0x281 /* V4L2_CTRL_TYPE_??? */, name="AV1 Tile Group Entry", ...}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf5 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf6, type=0x282 /* V4L2_CTRL_TYPE_??? */, name="AV1 Frame Parameters", ...}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf6 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf9, type=0x283 /* V4L2_CTRL_TYPE_??? */, name="AV1 Film Grain", ...}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf9}) = -1 EINVAL (Invalid argument)
+ioctl(1, TCGETS, {c_iflag=ICRNL|IXON|IXOFF|IUTF8, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B1500000|CS8|CREAD|HUPCL|CLOCAL, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|ECHOCTL|ECHOKE, ...}) = 0
+ioctl(5, MEDIA_IOC_DEVICE_INFO, 0xffffe56e0a58) = 0
+ioctl(5, MEDIA_IOC_G_TOPOLOGY, 0xffffe56e0948) = 0
+ioctl(5, MEDIA_IOC_G_TOPOLOGY, 0xffffe56e0948) = 0
+ioctl(3, VIDIOC_G_PRIORITY, 0xaaaac8de29c8) = 0
+ioctl(3, VIDIOC_G_TUNER, {index=0})     = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_FREQUENCY, 0xaaaac8decac8) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_TUNER, {index=0})     = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_MODULATOR, 0xffffe56e0c00) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_INPUT, 0xaaaac8decaf8) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_OUTPUT, 0xaaaac8decafc) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_AUDIO, 0xaaaac8decb00) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_AUDOUT, 0xaaaac8decb38) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_STD, 0xaaaac8decbf8)  = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_DV_TIMINGS, 0xaaaac8decb70) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_DV_TIMINGS_CAP, 0xffffe56e0bc8) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, fmt.pix_mp={width=64, height=64, pixelformat=v4l2_fourcc('V', 'T', '1', '2') /* V4L2_PIX_FMT_NV12_4L4 */, field=V4L2_FIELD_NONE, colorspace=V4L2_COLORSPACE_JPEG, plane_fmt=[{sizeimage=7424, bytesperline=64}], num_planes=1}}) = 0
+ioctl(3, VIDIOC_ENUM_FMT, {index=0, type=V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, flags=0, description="Y/UV 4:2:0 (4x4 Linear)", pixelformat=v4l2_fourcc('V', 'T', '1', '2') /* V4L2_PIX_FMT_NV12_4L4 */}) = 0
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, fmt.pix_mp={width=64, height=64, pixelformat=v4l2_fourcc('A', 'V', '1', 'F'), field=V4L2_FIELD_NONE, colorspace=V4L2_COLORSPACE_JPEG, plane_fmt=[{sizeimage=8192, bytesperline=0}], num_planes=1}}) = 0
+ioctl(3, VIDIOC_ENUM_FMT, {index=0, type=V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, flags=V4L2_FMT_FLAG_COMPRESSED, description="AV1 Frame", pixelformat=v4l2_fourcc('A', 'V', '1', 'F')}) = 0
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FBUF, 0xffffe56e0b58) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_SLICED_VBI_CAPTURE}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_SLICED_VBI_OUTPUT}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_VBI_CAPTURE}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_VBI_OUTPUT}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_SDR_CAPTURE}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_SDR_OUTPUT}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_META_CAPTURE}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_FMT, {type=V4L2_BUF_TYPE_META_OUTPUT}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_CROPCAP, {type=V4L2_BUF_TYPE_VIDEO_CAPTURE}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_CROPCAP, {type=V4L2_BUF_TYPE_VIDEO_OUTPUT}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_JPEGCOMP, 0xffffe56e0bc8) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_PARM, {type=V4L2_BUF_TYPE_VIDEO_CAPTURE}) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_G_PARM, {type=V4L2_BUF_TYPE_VIDEO_OUTPUT}) = -1 ENOTTY (Inappropriate ioctl for device)
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|0 /* V4L2_CID_??? */ => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4, type=0x280 /* V4L2_CTRL_TYPE_??? */, name="AV1 Sequence Parameters", ...}) = 0
+ioctl(3, VIDIOC_G_EXT_CTRLS, {ctrl_class=V4L2_CTRL_CLASS_CODEC_STATELESS, count=1, controls=[{id=0xa40af4 /* V4L2_CID_??? */, size=12, string="\0\0\0\0\0\0\10\0\0\0\0\0"}]}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf4 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf5, type=0x281 /* V4L2_CTRL_TYPE_??? */, name="AV1 Tile Group Entry", ...}) = 0
+ioctl(3, VIDIOC_G_EXT_CTRLS, {ctrl_class=V4L2_CTRL_CLASS_CODEC_STATELESS, count=1, controls=[{id=0xa40af5 /* V4L2_CID_??? */, size=16, string="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"}]}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf5 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf6, type=0x282 /* V4L2_CTRL_TYPE_??? */, name="AV1 Frame Parameters", ...}) = 0
+ioctl(3, VIDIOC_G_EXT_CTRLS, {ctrl_class=V4L2_CTRL_CLASS_CODEC_STATELESS, count=1, controls=[{id=0xa40af6 /* V4L2_CID_??? */, size=1784, string="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...}]}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf6 => V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf9, type=0x283 /* V4L2_CTRL_TYPE_??? */, name="AV1 Film Grain", ...}) = 0
+ioctl(3, VIDIOC_G_EXT_CTRLS, {ctrl_class=V4L2_CTRL_CLASS_CODEC_STATELESS, count=1, controls=[{id=0xa40af9 /* V4L2_CID_??? */, size=194, string="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...}]}) = 0
+ioctl(3, VIDIOC_QUERY_EXT_CTRL, {id=V4L2_CTRL_FLAG_NEXT_CTRL|V4L2_CTRL_FLAG_NEXT_COMPOUND|V4L2_CTRL_CLASS_CODEC_STATELESS+0xaf9}) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0b18) = -1 EINVAL (Invalid argument)
+ioctl(3, VIDIOC_G_SELECTION, 0xffffe56e0c18) = -1 EINVAL (Invalid argument)
++++ exited with 0 +++

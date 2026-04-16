@@ -1,0 +1,172 @@
+flowchart TD
+
+%% =====================
+%% ENTRY
+%% =====================
+ioctl_call["ioctl(fd, VIDIOC_REQBUFS, p)"] --> v4l_reqbufs
+
+%% =====================
+%% V4L2 CORE
+%% =====================
+v4l_reqbufs --> check_fmt
+v4l_reqbufs --> video_devdata
+v4l_reqbufs --> hantro_ioctl_ops
+
+check_fmt --> video_devdata
+
+%% VIDEO DEVICE
+video_devdata --> file_inode
+video_devdata --> iminor
+
+%% =====================
+%% DRIVER (HANTRO)
+%% =====================
+hantro_ioctl_ops --> v4l2_m2m_ioctl_reqbufs
+
+%% =====================
+%% M2M LAYER
+%% =====================
+v4l2_m2m_ioctl_reqbufs --> v4l2_m2m_reqbufs
+
+v4l2_m2m_reqbufs --> v4l2_m2m_get_vq
+v4l2_m2m_reqbufs --> vb2_reqbufs
+
+v4l2_m2m_get_vq --> get_queue_ctx
+
+%% =====================
+%% VB2 ENTRY
+%% =====================
+vb2_reqbufs --> vb2_set_flags_and_caps
+vb2_reqbufs --> vb2_verify_memory_type
+vb2_reqbufs --> vb2_core_reqbufs
+
+%% =====================
+%% VERIFY MEMORY TYPE
+%% =====================
+vb2_verify_memory_type --> verify_mmap_ops
+vb2_verify_memory_type --> verify_userptr_ops
+vb2_verify_memory_type --> verify_dmabuf_ops
+vb2_verify_memory_type --> vb2_fileio_is_active
+vb2_verify_memory_type --> dprintk_1
+
+%% =====================
+%% VB2 CORE
+%% =====================
+vb2_core_reqbufs --> vb2_get_num_buffers
+vb2_core_reqbufs --> verify_coherency_flags
+vb2_core_reqbufs --> dprintk_2
+vb2_core_reqbufs --> buffers_in_use
+vb2_core_reqbufs --> vb2_queue_cancel
+vb2_core_reqbufs --> vb2_queue_free
+vb2_core_reqbufs --> vb2_core_alloc_storage
+vb2_core_reqbufs --> set_queue_coherency
+vb2_core_reqbufs --> queue_setup_call
+vb2_core_reqbufs --> vb2_queue_alloc
+vb2_core_reqbufs --> vb2_core_free_storage
+
+%% =====================
+%% BUFFERS IN USE
+%% =====================
+buffers_in_use --> vb2_get_buffer_1
+buffers_in_use --> vb2_buffer_in_use
+vb2_get_buffer_1 --> test_bit
+
+%% =====================
+%% QUEUE CANCEL
+%% =====================
+vb2_queue_cancel --> vb2_get_buffer_2
+vb2_queue_cancel --> vb2_buffer_done
+vb2_queue_cancel --> vb2_buf_mem_finish
+vb2_queue_cancel --> vb2_dqbuf
+vb2_queue_cancel --> atomic_read
+vb2_queue_cancel --> spin_lock
+vb2_queue_cancel --> spin_unlock
+vb2_queue_cancel --> wake_up_all
+
+%% BUFFER DONE
+vb2_buffer_done --> vb2_state_name
+vb2_buffer_done --> vb2_buf_mem_finish
+vb2_buffer_done --> media_req_unbind
+vb2_buffer_done --> media_req_put
+vb2_buffer_done --> list_add_tail
+vb2_buffer_done --> atomic_dec
+vb2_buffer_done --> spin_lock
+vb2_buffer_done --> spin_unlock
+vb2_buffer_done --> wake_up
+
+%% =====================
+%% QUEUE FREE
+%% =====================
+vb2_queue_free --> vb2_get_buffer_3
+vb2_queue_free --> vb2_free_mem
+vb2_queue_free --> vb2_queue_remove_buffer
+vb2_queue_free --> kfree
+vb2_queue_free --> lockdep_assert
+
+%% FREE MEM
+vb2_free_mem --> vb2_get_buffer_4
+vb2_free_mem --> vb2_buf_mem_free
+vb2_free_mem --> vb2_buf_dmabuf_put
+vb2_free_mem --> vb2_buf_userptr_put
+
+vb2_buf_mem_free --> dprintk_3
+vb2_buf_dmabuf_put --> vb2_plane_dmabuf_put
+
+%% =====================
+%% QUEUE ALLOC
+%% =====================
+vb2_queue_alloc --> vb2_get_num_buffers_2
+vb2_queue_alloc --> kzalloc
+vb2_queue_alloc --> vb2_queue_add_buffer
+vb2_queue_alloc --> vb2_buf_mem_alloc
+vb2_queue_alloc --> vb2_queue_remove_buffer_2
+vb2_queue_alloc --> setup_offsets
+vb2_queue_alloc --> dprintk_4
+
+vb2_buf_mem_alloc --> call_ptr_memop
+vb2_buf_mem_alloc --> ptr_err
+vb2_buf_mem_alloc --> page_align
+
+vb2_queue_add_buffer --> set_bit
+vb2_queue_add_buffer --> test_bit
+
+%% =====================
+%% HELPERS
+%% =====================
+vb2_get_num_buffers --> bitmap_weight
+verify_coherency_flags --> dprintk_5
+set_queue_coherency --> vb2_queue_allows_cache_hints
+
+%% =====================
+%% CORE EXTERNALS
+%% =====================
+vb2_core_reqbufs --> mutex_lock
+vb2_core_reqbufs --> mutex_unlock
+vb2_core_reqbufs --> warn_on
+vb2_core_reqbufs --> min_max
+vb2_core_reqbufs --> memset
+
+%% =====================
+%% KERNEL UTILITIES
+%% =====================
+subgraph Kernel_Utilities
+    memset
+    mutex_lock
+    mutex_unlock
+    warn_on
+    min_max
+    spin_lock
+    spin_unlock
+    atomic_read
+    atomic_dec
+    wake_up_all
+    wake_up
+    list_add_tail
+    test_bit
+    set_bit
+    lockdep_assert
+    bitmap_weight
+    page_align
+    kzalloc
+    kfree
+end
