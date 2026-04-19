@@ -11,4 +11,4 @@ DB_PATH="/home/till/thesis/bsp/.src/linux/hantro-db"
 
 # Run the CodeQL command
 echo "Running query: $1 on database $DB_PATH..."
-codeql query run "$1" --database="$DB_PATH"
+codeql query run "$1" --database="$DB_PATH" --ram=6144

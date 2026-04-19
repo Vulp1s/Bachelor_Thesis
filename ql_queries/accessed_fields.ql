@@ -6,7 +6,6 @@ where
   f = fa.getTarget() and
   s = f.getDeclaringType() and
   Hantro::isDriverStruct(s) and
-  fa.isModified() and                          // writes only
   not Hantro::isDriverFile(fa.getFile())               // from outside driver
 select fa, s.getName() + "::" + f.getName(),
        "kernel writes this driver field"
