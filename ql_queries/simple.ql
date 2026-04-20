@@ -1,14 +1,9 @@
 import cpp
 
-// Quick check: find all initializations of v4l2_ctrl_type_ops
-from ClassAggregateLiteral init, Field f, Function target
+from ClassAggregateLiteral init
 where
-  init.getType().getUnspecifiedType().(Struct).getName() = "v4l2_ctrl_type_ops" and
-  f = init.getAFieldExpr(_).getTarget() and       // any field
-  target.getAnAccess() = init.getAFieldExpr(f)
+  init.getType().getUnspecifiedType().(Struct).getName() = 
+    "v4l2_subscribed_event_ops"
 select
-  init.getFile().getBaseName(),
-  init.getLocation().getStartLine(),
-  f.getName()              as field,
-  target.getName()         as resolved_function
-order by field
+  init.getFile().getAbsolutePath(),
+  init.getLocation().getStartLine()

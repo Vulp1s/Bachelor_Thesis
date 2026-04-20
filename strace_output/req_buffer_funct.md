@@ -1,29 +1,23 @@
 ioctl_call label="ioctl(fd, VIDIOC_REQBUFS, p)"
 # structs
 ## v4l2_ioctl_ops 
-implemented by hantro_ioctl_ops
+implemented by hantro_ioctl_ops in hantro_v4l2
+## vb2_ops
+implemented by hantro_queue_ops in hantro_v4l2
+## vb2_mem_ops
+implemented by vb2_dma_contig_memops defined in hantro_drv
+## hantro_codec_ops
+implemented in rk3588_vpu981_codec_ops in rockchip_vpu_hw
+## v4l2_subscribed_event_ops
+implemented in v4l2_ctrl_sub_ev_ops in v4l2-ctrls-api
+## vb2_buf_ops
+implemented in v4l2_buf_ops in videobuf2-v4l2
+
 ## vb2_buffer
 ### vb2_queue
 - is part of vb2_buffer
-# kernel
-## iminor
-static inline unsigned iminor(const struct inode *inode)
-Structs:
-- inode read
-## file_inode
-static inline struct inode *file_inode(const struct file *f)
-structs:
-- file read
-## memset_after (makro)
-calls:
-- typeof
-- memset
-## bitmap_weight
-## mutex_lock
-## kzalloc
-slab.h
 # v4l2 ioctl
-## v4l_reqbufs
+## v4l_reqbuf
 static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops, struct file *file, void *fh, void *arg)
 
 Structs:
@@ -65,7 +59,7 @@ indirect:
 - ops->vidioc_g_fmt_meta_cap: NULL
 - ops->vidioc_g_fmt_meta_out: NULL
 
-# Other v4l2
+# v4l2-dev
 ## video_devdata
 struct video_device *video_devdata(struct file *file)
 Structs:
@@ -100,6 +94,38 @@ structs:
 
 calls:
 - dma_free_coherent
+
+## rockchip_vpu981_av1_dec_init
+int rockchip_vpu981_av1_dec_init(struct hantro_ctx *ctx)
+
+structs:
+- struct hantro_ctx: read
+- struct hantro_dev: read (ctx->dev)
+- struct hantro_av1_dec_hw_ctx: write (ctx->av1_dec)
+- struct hantro_aux_buf: write (nested members like global_model, tile_info, etc.)
+- struct rockchip_av1_film_grain: read (via sizeof)
+- struct av1cdfs: read (via sizeof)
+
+calls:
+- memset
+- dma_alloc_coherent
+- ALIGN
+- rockchip_av1_set_default_cdfs
+
+# rockchip_av1_entropymode
+
+## rockchip_av1_set_default_cdfs
+void rockchip_av1_set_default_cdfs(struct av1cdfs *cdfs, struct mvcdfs *cdfs_ndvc)
+
+structs:
+- struct av1cdfs: write
+- struct mvcdfs: write
+calls:
+- memcpy
+
+globals/constants:
+- default_partition_cdf: read
+- default_intra_ext_tx0_cdf: read
 
 # Hantro
 ## v4l2_ioctl_ops
@@ -166,6 +192,20 @@ calls:
 - vb2_get_drv_priv
 - v4l2_ctrl_request_complete
 - v4l2_m2m_buf_done
+
+## hantro_buf_request_complete
+static void hantro_buf_request_complete(struct vb2_buffer *vb)
+
+structs:
+- struct vb2_buffer: read
+- struct hantro_ctx: read
+- struct vb2_queue: read (via vb->vb2_queue)
+- struct media_request_object: read (via vb->req_obj)
+- struct v4l2_ctrl_handler: read (via ctx->ctrl_handler)
+
+calls:
+- vb2_get_drv_priv
+- v4l2_ctrl_request_complete
 
 # v4l2-ctrls-core
 ## handler_new_ref
@@ -253,7 +293,7 @@ calls:
 - list_add_tail
 - mutex_unlock
 indirect:
-- ctrl->type_ops->init (indirect call)
+- ctrl->type_ops->init calls rockchip_vpu981_av1_dec_done defined in hantro_codec_ops rk3588_vpu981_codec_ops[] 
 
 ## check_range
 int check_range(enum v4l2_ctrl_type type, s64 min, s64 max, u64 step, s64 def)
@@ -693,8 +733,8 @@ calls:
 - list_add_tail
 - wake_up_all
 indirect:
-- sev->ops->replace (indirect call)
-- sev->ops->merge (indirect call)
+- sev->ops->replace calls v4l2_ctrl_replace
+- sev->ops->merge calls v4l2_ctrl_merge 
 ## sev_pos
 static unsigned int sev_pos(const struct v4l2_subscribed_event *sev, unsigned int idx)
 
@@ -715,6 +755,28 @@ structs:
 calls:
 - assert_spin_locked
 - list_for_each_entry
+
+# v4l2-ctrls-api
+
+## v4l2_ctrl_replace
+void v4l2_ctrl_replace(struct v4l2_event *old, const struct v4l2_event *new)
+
+structs:
+- struct v4l2_event: read/write
+- struct v4l2_event_ctrl: read/write (via old->u.ctrl and new->u.ctrl)
+
+calls:
+- None
+
+## v4l2_ctrl_merge
+void v4l2_ctrl_merge(const struct v4l2_event *old, struct v4l2_event *new)
+
+structs:
+- struct v4l2_event: read/write
+- struct v4l2_event_ctrl: read/write (via new->u.ctrl and old->u.ctrl)
+
+calls:
+- None
 
 # VB2 v4l2
 ## vb2_reqbufs
@@ -822,13 +884,16 @@ static inline struct vb2_buffer *vb2_get_buffer(struct vb2_queue *q, unsigned in
 struct:
 - vb2_queue read
 calls:
-- test_bit ## vb2_buffer_in_use
+- test_bit 
+
+## vb2_buffer_in_use
 bool vb2_buffer_in_use(struct vb2_queue *q, struct vb2_buffer *vb)
 structs:
 - vb2_queue unused 
 - vb2_buffer read
 indirect:
-num_users of vb2_buffer
+num_users calls vb2_dc_num_users as the driver uses contiguous memory (see hantro_drv)
+
 ## __vb2_queue_cancel
 static void __vb2_queue_cancel(struct vb2_queue *q)
 struct:
@@ -847,9 +912,9 @@ calls:
 - media_request*
 indirect:
 - stop_streaming calls hantro_stop_streaming
-- unprepare_streaming (driver)
-- vb_qop buf_request_complete
-- vb_qop buf_finish
+- unprepare_streaming optional, not defined -> never called!
+- vb_qop buf_request_complete calls hantro_buf_request_complete
+- vb_qop buf_finish optional, not defined -> never called!
 ## __vb2_queue_free
 static void __vb2_queue_free(struct vb2_queue *q, unsigned int start, unsigned int count)
 structs:
@@ -864,7 +929,7 @@ calls:
 - vb2_get_num_buffers
 - INIT_LIST_HEAD
 indirect:
-- vb_qop buf_cleanup (driver)
+- vb_qop buf_cleanup is not defined by hantro -> never called!
 
 ## __vb2_free_mem
 static void __vb2_free_mem(struct vb2_queue *q, unsigned int start, unsigned int count)
@@ -884,7 +949,7 @@ structs:
 calls:
 - dprintk
 indirect:
-- memop put (driver)
+- memop put calls vb2_dc_put
 
 ## __vb2_buf_dmabuf_put
 static void __vb2_buf_dmabuf_put(struct vb2_buffer *vb)
@@ -900,8 +965,8 @@ structs:
 calls:
 - dma_buf_put
 indirect:
-- memop unmap_dmabuf
-- memop detach_dmabuf
+- memop unmap_dmabuf calls vb2_dc_unmap_dmabuf
+- memop detach_dmabuf calls vb2_dc_detach_dmabuf
 ## dma_buf_put
 void dma_buf_put(struct dma_buf *dmabuf)
 structs:
@@ -914,14 +979,14 @@ static void __vb2_buf_userptr_put(struct vb2_buffer *vb)
 structs:
 - vb2_buffer read
 indirect:
-- memop put_userptr (driver)
+- memop put_userptr calls vb2_dc_put_userptr 
 
 ## __vb2_dqbuf
 static void __vb2_dqbuf(struct vb2_buffer *vb)
 structs: 
 - vb2_buffer write
 indirect:
-- bufop init_buffer
+- bufop init_buffer calls __init_vb2_v4l2_buffer
 
 ## vb2_core_dqbuf
 int vb2_core_dqbuf(struct vb2_queue *q, unsigned int *pindex, void *pb)
@@ -959,7 +1024,7 @@ static void __vb2_buf_mem_finish(struct vb2_buffer *vb)
 struct:
 - vb2_buffer write
 indirect:
-- memop vb_buffer -> finish 
+- memop vb_buffer finish calls vb2_dc_finish 
 
 ## set_queue_coherency
 static void set_queue_coherency(struct vb2_queue *q, bool non_coherent_mem)
@@ -992,7 +1057,7 @@ calls:
 - __setup_offsets
 - __vb2_buf_mem_free
 indirect:
-- bufop init_buffer
+- bufop init_buffer __init_vb2_v4l2_buffer
 
 ## __setup_offsets
 static void __setup_offsets(struct vb2_buffer *vb)
@@ -1018,8 +1083,8 @@ calls:
 - IS_ERR_OR_NULL
 - PTR_ERR
 indirect:
-- ptr_memop alloc (driver)
-- memop put (driver)
+- ptr_memop alloc calls vb2_dc_alloc
+- memop put calls vb2_dc_put
 
 ## vb2_queue_add_buffer
 static void vb2_queue_add_buffer(struct vb2_queue *q, struct vb2_buffer *vb, unsigned int index)
@@ -1052,3 +1117,161 @@ calls:
 - sizeof
 - bitmap_zalloc
 - kfree
+
+# vieobuf2-dma-contig
+
+## vb2_dc_num_users
+static unsigned int vb2_dc_num_users(void *buf_priv)
+
+structs:
+- struct vb2_dc_buf: read
+
+calls:
+- refcount_read
+
+## vb2_dc_put
+static void vb2_dc_put(void *buf_priv)
+
+structs:
+- struct vb2_dc_buf: read/write
+- struct device: read (via buf->dev)
+- struct sg_table: read/write (via buf->sgt_base)
+
+calls:
+- refcount_dec_and_test
+- dma_vunmap_noncontiguous
+- dma_free_noncontiguous
+- sg_free_table
+- kfree
+- dma_free_attrs
+- put_device
+
+## vb2_dc_alloc
+static void *vb2_dc_alloc(struct vb2_buffer *vb, struct device *dev, unsigned long size)
+
+structs:
+- struct vb2_dc_buf: write
+- struct vb2_buffer: read
+- struct vb2_queue: read (via vb->vb2_queue)
+- struct device: read/write
+
+calls:
+- WARN_ON
+- ERR_PTR
+- kzalloc
+- get_device
+- vb2_dc_alloc_non_coherent
+- vb2_dc_alloc_coherent
+- dev_err
+- kfree
+- refcount_set
+
+## vb2_dc_alloc_non_coherent
+static int vb2_dc_alloc_non_coherent(struct vb2_dc_buf *buf)
+
+structs:
+- struct vb2_dc_buf: read/write
+- struct vb2_queue: read (via buf->vb->vb2_queue)
+- struct sg_table: read (via buf->dma_sgt)
+- struct scatterlist: read (via buf->dma_sgt->sgl)
+
+calls:
+- dma_alloc_noncontiguous
+- sg_dma_address
+
+## vb2_dc_alloc_coherent
+static int vb2_dc_alloc_coherent(struct vb2_dc_buf *buf)
+
+structs:
+- struct vb2_dc_buf: read/write
+- struct vb2_queue: read (via buf->vb->vb2_queue)
+
+calls:
+- dma_alloc_attrs
+
+## vb2_dc_unmap_dmabuf
+static void vb2_dc_unmap_dmabuf(void *mem_priv)
+
+structs:
+- struct vb2_dc_buf: read/write
+- struct sg_table: read
+- struct iosys_map: write
+- struct dma_buf_attachment: read (buf->db_attach)
+
+calls:
+- IOSYS_MAP_INIT_VADDR
+- WARN_ON
+- pr_err
+- dma_buf_vunmap_unlocked
+- dma_buf_unmap_attachment_unlocked
+
+## vb2_dc_detach_dmabuf
+static void vb2_dc_detach_dmabuf(void *mem_priv)
+
+structs:
+- struct vb2_dc_buf: read
+- struct dma_buf_attachment: read (buf->db_attach)
+- struct dma_buf: read (via buf->db_attach->dmabuf)
+
+calls:
+- WARN_ON
+- vb2_dc_unmap_dmabuf
+- dma_buf_detach
+- kfree
+
+## vb2_dc_put_userptr
+static void vb2_dc_put_userptr(void *buf_priv)
+
+structs:
+- struct vb2_dc_buf: read/write
+- struct sg_table: read/write
+- struct page: write (via set_page_dirty_lock)
+- struct frame_vector: read (via buf->vec)
+
+calls:
+- dma_unmap_sgtable
+- frame_vector_pages
+- frame_vector_count
+- WARN_ON_ONCE
+- IS_ERR
+- set_page_dirty_lock
+- sg_free_table
+- kfree
+- dma_unmap_resource
+- vb2_destroy_framevec
+
+## vb2_dc_finish
+static void vb2_dc_finish(void *buf_priv)
+
+structs:
+- struct vb2_dc_buf: read
+- struct vb2_buffer: read (via buf->vb)
+- struct sg_table: read (via buf->dma_sgt)
+
+calls:
+- invalidate_kernel_vmap_range
+- dma_sync_sgtable_for_cpu
+
+# videobuf2-v4l2
+
+## __init_vb2_v4l2_buffer
+static void __init_vb2_v4l2_buffer(struct vb2_buffer *vb)
+
+structs:
+- struct vb2_buffer: read
+- struct vb2_v4l2_buffer: write
+
+calls:
+- to_vb2_v4l2_buffer makro using container_of
+
+# videobuf2-memops
+
+## vb2_destroy_framevec
+void vb2_destroy_framevec(struct frame_vector *vec)
+
+structs:
+- struct frame_vector: read/write
+
+calls:
+- put_vaddr_frames
+- frame_vector_destroy

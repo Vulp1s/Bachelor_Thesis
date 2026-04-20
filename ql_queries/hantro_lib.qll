@@ -30,6 +30,12 @@ module Hantro {
       "wait_prepare", "wait_finish"
     ]
     or
+    // hantro_codec_ops — per-codec hardware operations
+    // e.g. rk3588_vpu981_codec_ops[HANTRO_MODE_AV1_DEC]
+    structName = "hantro_codec_ops" and fieldName in [
+      "run", "init", "exit", "done"
+    ]
+    or
     // vb2_mem_ops — memory allocator operations
     structName = "vb2_mem_ops" and fieldName in [
       "alloc", "put",
@@ -39,6 +45,8 @@ module Hantro {
       "prepare", "finish",
       "vaddr", "cookie", "num_users"
     ]
+    or
+    structName = "vb2_buf_ops" and fieldName in ["init_buffer"]
     or
     // v4l2_ioctl_ops — ioctl dispatch table
     structName = "v4l2_ioctl_ops" and fieldName in [
