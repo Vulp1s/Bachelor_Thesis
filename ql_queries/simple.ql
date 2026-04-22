@@ -1,9 +1,8 @@
+// Quick database coverage check
 import cpp
 
-from ClassAggregateLiteral init
+from File f
 where
-  init.getType().getUnspecifiedType().(Struct).getName() = 
-    "v4l2_subscribed_event_ops"
-select
-  init.getFile().getAbsolutePath(),
-  init.getLocation().getStartLine()
+  f.getAbsolutePath().matches("%media%") and
+  f.getExtension() = "c"
+select f.getAbsolutePath()
