@@ -552,6 +552,19 @@ structs:
 calls:
 - vb2_get_drv_priv
 
+## hantro_queue_setup
+static int hantro_queue_setup(struct vb2_queue *vq, unsigned int *num_buffers, unsigned int *num_planes, unsigned int sizes[], struct device *alloc_devs[])
+
+structs:
+- struct vb2_queue: read
+- struct hantro_ctx: read
+- struct v4l2_pix_format_mplane: read
+- struct v4l2_plane_pix_format: read (via pixfmt->plane_fmt)
+
+calls:
+- vb2_get_drv_priv
+- vpu_err
+
 # v4l2 m2m
 ## v4l2_m2m_ioctl_reqbufs
 int v4l2_m2m_ioctl_reqbufs(struct file *file, void *priv, struct v4l2_requestbuffers *rb)
@@ -853,8 +866,8 @@ calls:
 - max_t / min_t
 - memset
 - WARN_ON
-inderect:
-- qop queue_setup
+indirect:
+- qop queue_setup calls hantro_queue_setup
 
 ## vb2_get_num_buffers
 static inline unsigned int vb2_get_num_buffers(struct vb2_queue *q)
