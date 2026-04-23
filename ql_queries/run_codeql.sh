@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 # Define the database path
-DB_PATH="/home/till/thesis/bsp/.src/linux/hantro-db"
+DB_PATH="/home/till/thesis/hantro-db"
 
 # Run the CodeQL command
 echo "Running query: $1 on database $DB_PATH..."
