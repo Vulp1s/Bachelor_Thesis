@@ -46,8 +46,7 @@ Concretly the implementations of ops structs are being confirmed. Then unused an
 
 ### 3 · Call graph visualisation
 
-Graphviz `.dot` files encode the full static call graph with annotated data structure edges.
-Interactive D3 force-directed graphs allow colour-coded module-level exploration.
+Use tool to visualize call tree
 
 
 ## Status
@@ -55,15 +54,21 @@ Interactive D3 force-directed graphs allow colour-coded module-level exploration
 🚧 **Work in progress** — bachelor thesis ongoing.
 
 - [x] AV1 hardware decode pipeline working on Rock 5B  
-- [x] CodeQL database built from kernel source  
-- [x] Initial manual call graph for `VIDIOC_QBUF` complete  
-- [x] Queries for remaining three ioctls  
-- [ ] eBPF runtime confirmation pass  
-- [ ] Cross-validation and dependency set finalisation
+- [x] Initial manual call graph for `VIDIOC_REQBUFS` complete
+- [x] CodeQL database built from kernel source
+- [x] Recursive Queries
+- [x] Add filter logic to queries
+- [x] Add query to find structs not filtered yet 
+- [ ] eBPF struct check
+  - [ ] m2m ops stuct
+  - [ ] v4l2_subdev_pad_ops, v4l2_subdev_video_ops
+  - [ ] hantro_postproc_ops
+- [ ] finish filter and validate against manual trace
+- [ ] (optional) find unuesed / little used functions 
 - [ ] visualization
 
 
 ## Author
 
-Till — BSc Computer Science, ETH Zurich  
+Till Begue — BSc Computer Science, ETH Zurich  
 Thesis supervisor: Clemens Thorens 
