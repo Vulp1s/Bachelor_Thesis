@@ -1,11 +1,13 @@
 import cpp
 import hantro_lib
 
-from Function entry, Function reached
+from Function entry, Function caller, Function reached
 where
-  entry.getName() = "vb2_core_reqbufs" and
-  Hantro::calls+(entry, reached) and     // transitive
-  Hantro::isDriverFile(entry.getFile()) // tracks calls outside but not further
+  entry.getName() = "v4l_reqbufs" and
+  (caller = entry or Hantro::calls+(entry, caller)) and
+  Hantro::calls(caller, reached) and
+  Hantro::isDriverFile(reached.getFile())
 select
-  reached.getName(),
-  reached.getFile().getBaseName()
+  caller.getName() as caller_func,
+  reached.getName() as called_func,
+  reached.getFile().getBaseName() as file

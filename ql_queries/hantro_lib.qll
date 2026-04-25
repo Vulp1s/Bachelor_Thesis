@@ -3,92 +3,133 @@ import cpp
 
 module Hantro {
   predicate isDriverFile(File f) {
-  exists(string path | 
-    path = f.getAbsolutePath() |
-    path.matches("%drivers/media%")        or  // all media drivers
-    path.matches("%include/media%")        or  // media headers
-    path.matches("%include/linux/videodev2%")  // uapi (optional)
-  )
-  }
-
-  predicate isDriverStruct(Struct s) {
-    s.getName() in [
-      "vb2_queue", "vb2_buffer", "vb2_v4l2_buffer",
-      "hantro_ctx", "hantro_dev", "hantro_buf"
-    ]
-  }
-
-  predicate isActiveImpl(Field f, Function impl) {
-    // mem_ops: only dma-contig, not dma-sg or vmalloc
-    f.getDeclaringType().getName() = "vb2_mem_ops" and
-    impl.getFile().getBaseName() = "videobuf2-dma-contig.c"
-    or
-    // codec_ops: only av1, not other decoders
-    f.getDeclaringType().getName() = "hantro_codec_ops" and
-    impl.getFile().getBaseName() = "rockchip_vpu981_hw_av1_dec.c"
-    or
-    // all other tracked structs: no restriction on impl file
-    not f.getDeclaringType().getName() in [
-      "vb2_mem_ops", "hantro_codec_ops"
-    ]
-  }
-
-  predicate isImplementedOpsField(string structName, string fieldName) {
-    // vb2_ops — hantro_queue_ops in hantro_v4l2.c
-    structName = "vb2_ops" and fieldName in [
-      "queue_setup", "buf_prepare", "buf_queue",
-      "buf_request_complete", "buf_out_validate",
-      "start_streaming", "stop_streaming",
-      "wait_prepare", "wait_finish"
-    ]
-    or
-    // hantro_codec_ops - rk3036_vpu_codec_ops in rockchip_vpu_hw.c
-    structName = "hantro_codec_ops" and fieldName in [
-      "run", "init", "exit", "reset"
-    ]
-    or
-    // vb2_mem_ops — vb2_dma_contig_memops in videobuf2-dma-contig.c
-    structName = "vb2_mem_ops" and fieldName in [
-      "alloc", "put", "get_dmabuf", "cookie", "vaddr", "mmap",
-      "get_userptr", "put_userptr", "prepare", "finish",
-      "map_dmabuf", "unmap_dmabuf", "attach_dmabuf", "detach_dmabuf",
-      "num_users"
-    ]
-    or
-    // vb2_buf_ops - v4l2_buf_ops in videobuf2-v4l2.c
-    structName = "vb2_buf_ops" and fieldName in [
-      "verify_planes_array", "init_buffer", "fill_user_buffer",
-      "fill_vb2_buffer", "copy_timestamp"
-    ]
-    or
-    // v4l2_ioctl_ops — hantro_ioctl_ops
-    structName = "v4l2_ioctl_ops" and fieldName in [
-      "vidioc_querycap", "vidioc_enum_framesizes",
-      "vidioc_try_fmt_vid_cap_mplane", "vidioc_try_fmt_vid_out_mplane",
-      "vidioc_s_fmt_vid_out_mplane", "vidioc_s_fmt_vid_cap_mplane",
-      "vidioc_g_fmt_vid_out_mplane", "vidioc_g_fmt_vid_cap_mplane",
-      "vidioc_enum_fmt_vid_out", "vidioc_enum_fmt_vid_cap",
-      "vidioc_reqbufs", "vidioc_querybuf", "vidioc_qbuf", "vidioc_dqbuf",
-      "vidioc_prepare_buf", "vidioc_create_bufs", "vidioc_remove_bufs",
-      "vidioc_expbuf", "vidioc_subscribe_event", "vidioc_unsubscribe_event",
-      "vidioc_streamon", "vidioc_streamoff", "vidioc_g_selection",
-      "vidioc_s_selection", "vidioc_decoder_cmd", "vidioc_try_decoder_cmd",
-      "vidioc_try_encoder_cmd", "vidioc_encoder_cmd"
-    ]
-  }
-
-  /** Convenience: does this Field match any tracked ops entry? */
-  predicate isImplementedField(Field f) {
-    exists(string sn, string fn |
-      isImplementedOpsField(sn, fn) and
-      f.getDeclaringType().getUnspecifiedType().(Struct).getName() = sn and
-      f.getName() = fn
+    exists(string path |
+      path = f.getAbsolutePath() |
+      path.matches("%drivers/media/v4l2-core%") or // v4l2-core
+      path.matches("%videobuf2%") or // videobuf2
+      path.matches("%verisilicon%") // decoder driver
     )
   }
 
-  predicate resolvesOpsField(Field f, Function impl) {
-    isImplementedField(f) and
-    isActiveImpl(f, impl) and
+  // we know where this struct is defined and which functions are used by av1 decoding
+  predicate isTrackedOpsStruct(string structName) {
+    structName in [
+      "vb2_ops",
+      "hantro_codec_ops",
+      "vb2_mem_ops",
+      "vb2_buf_ops",
+      "v4l2_ioctl_ops",
+      "v4l2_ctrl_ops",
+      "v4l2_ctrl_type_ops",
+      "v4l2_subscribed_event_ops"
+    ]
+  }
+
+  predicate isActiveImplementation(Function f) {
+    // vb2_ops — hantro_queue_ops (hantro_v4l2.c)
+    f.getName() in [
+      "hantro_queue_setup",
+      "hantro_buf_prepare",
+      "hantro_buf_queue",
+      "hantro_buf_out_validate",
+      "hantro_buf_request_complete",
+      "hantro_start_streaming",
+      "hantro_stop_streaming",
+      "vb2_ops_wait_prepare",
+      "vb2_ops_wait_finish"
+    ]
+    or
+    // hantro_codec_ops — RK3588 AV1 only (rockchip_vpu981_hw_av1_dec.c)
+    f.getName() in [
+      "rockchip_vpu981_av1_dec_run",
+      "rockchip_vpu981_av1_dec_init",
+      "rockchip_vpu981_av1_dec_exit",
+      "rockchip_vpu981_av1_dec_done"
+    ]
+    or
+    // vb2_mem_ops — dma-contig only (videobuf2-dma-contig.c)
+    // dma-sg and vmalloc implementations are excluded by omission
+    f.getName() in [
+      "vb2_dc_alloc",
+      "vb2_dc_put",
+      "vb2_dc_get_dmabuf",
+      "vb2_dc_cookie",
+      "vb2_dc_vaddr",
+      "vb2_dc_mmap",
+      "vb2_dc_get_userptr",
+      "vb2_dc_put_userptr",
+      "vb2_dc_prepare",
+      "vb2_dc_finish",
+      "vb2_dc_map_dmabuf",
+      "vb2_dc_unmap_dmabuf",
+      "vb2_dc_attach_dmabuf",
+      "vb2_dc_detach_dmabuf",
+      "vb2_dc_num_users"
+    ]
+    or
+    // vb2_buf_ops — v4l2_buf_ops (videobuf2-v4l2.c)
+    f.getName() in [
+      "__verify_planes_array_core",
+      "__init_vb2_v4l2_buffer",
+      "__fill_v4l2_buffer",
+      "__fill_vb2_buffer",
+      "__copy_timestamp"
+    ]
+    or
+    // v4l2_ioctl_ops — hantro_ioctl_ops (hantro_v4l2.c)
+    f.getName() in [
+      "vidioc_querycap",
+      "vidioc_enum_framesizes",
+      "vidioc_try_fmt_cap_mplane",
+      "vidioc_try_fmt_out_mplane",
+      "vidioc_s_fmt_out_mplane",
+      "vidioc_s_fmt_cap_mplane",
+      "vidioc_g_fmt_out_mplane",
+      "vidioc_g_fmt_cap_mplane",
+      "vidioc_enum_fmt_vid_out",
+      "vidioc_enum_fmt_vid_cap",
+      "v4l2_m2m_ioctl_reqbufs",
+      "v4l2_m2m_ioctl_querybuf",
+      "v4l2_m2m_ioctl_qbuf",
+      "v4l2_m2m_ioctl_dqbuf",
+      "v4l2_m2m_ioctl_prepare_buf",
+      "v4l2_m2m_ioctl_create_bufs",
+      "v4l2_m2m_ioctl_remove_bufs",
+      "v4l2_m2m_ioctl_expbuf",
+      "v4l2_ctrl_subscribe_event",
+      "v4l2_event_unsubscribe",
+      "v4l2_m2m_ioctl_streamon",
+      "v4l2_m2m_ioctl_streamoff",
+      "vidioc_g_selection",
+      "vidioc_s_selection",
+      "v4l2_m2m_ioctl_stateless_decoder_cmd",
+      "v4l2_m2m_ioctl_stateless_try_decoder_cmd",
+      "v4l2_m2m_ioctl_try_encoder_cmd",
+      "vidioc_encoder_cmd"
+    ]
+    or
+    // hantro_av1_ctrl_ops in hantro_drv
+    f.getName() in [
+      "hantro_try_ctrl",
+      "hantro_av1_s_ctrl"
+      ]
+    or
+    // v4l2_ctrl_type_ops in v4l2-ctrls-core
+    f.getName() in [
+      "v4l2_ctrl_type_op_equal",
+      "v4l2_ctrl_type_op_init",
+      "v4l2_ctrl_type_op_log",
+      "v4l2_ctrl_type_op_validate"
+      ]
+    // v4l2_subscribed_event_ops is not triggered by simple decoding
+  }
+
+  predicate resolvesTrackedOpsField(Field f, Function impl) {
+    // struct is in our discovery list
+    isTrackedOpsStruct(f.getDeclaringType().getUnspecifiedType().(Struct).getName()) and
+    // implementation is on the active RK3588 AV1 path
+    isActiveImplementation(impl) and
+    // static resolution from initializer
     exists(ClassAggregateLiteral init |
       init.getType().getUnspecifiedType().(Struct).getName() =
         f.getDeclaringType().getUnspecifiedType().(Struct).getName() and
@@ -106,7 +147,7 @@ module Hantro {
       c.getEnclosingFunction() = caller and
       fa = c.getExpr() and
       f = fa.getTarget() and
-      resolvesOpsField(f, callee)
+      resolvesTrackedOpsField(f, callee)
     )
   }
 }
