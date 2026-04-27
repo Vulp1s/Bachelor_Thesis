@@ -6,7 +6,7 @@ where
   entry.getName() = "v4l_reqbufs" and
   (caller = entry or Hantro::calls+(entry, caller)) and
   Hantro::calls(caller, reached) and
-  Hantro::isDriverFile(reached.getFile())
+  Hantro::isDriverFile(caller.getFile())
 select
   caller.getName() as caller_func,
   reached.getName() as called_func,

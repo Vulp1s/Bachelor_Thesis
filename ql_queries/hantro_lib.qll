@@ -21,14 +21,18 @@ module Hantro {
       "v4l2_ioctl_ops",
       "v4l2_ctrl_ops",
       "v4l2_ctrl_type_ops",
-      "v4l2_subscribed_event_ops"
+      "v4l2_subscribed_event_ops",
+      "v4l2_m2m_ops",
+      "hantro_postproc_ops",
+      "v4l2_subdev_video_ops",
+      "v4l2_subdev_pad_ops"
     ]
   }
 
   predicate isActiveImplementation(Function f) {
     // vb2_ops — hantro_queue_ops (hantro_v4l2.c)
     f.getName() in [
-      "hantro_queue_setup",
+      "hantro_queue_setup", //confirmed using kprobe
       "hantro_buf_prepare",
       "hantro_buf_queue",
       "hantro_buf_out_validate",
@@ -50,7 +54,7 @@ module Hantro {
     // vb2_mem_ops — dma-contig only (videobuf2-dma-contig.c)
     // dma-sg and vmalloc implementations are excluded by omission
     f.getName() in [
-      "vb2_dc_alloc",
+      "vb2_dc_alloc", //confimed using kprobe
       "vb2_dc_put",
       "vb2_dc_get_dmabuf",
       "vb2_dc_cookie",
@@ -70,7 +74,7 @@ module Hantro {
     // vb2_buf_ops — v4l2_buf_ops (videobuf2-v4l2.c)
     f.getName() in [
       "__verify_planes_array_core",
-      "__init_vb2_v4l2_buffer",
+      "__init_vb2_v4l2_buffer", //confirmed using kprobe
       "__fill_v4l2_buffer",
       "__fill_vb2_buffer",
       "__copy_timestamp"
@@ -108,10 +112,11 @@ module Hantro {
       "vidioc_encoder_cmd"
     ]
     or
-    // hantro_av1_ctrl_ops in hantro_drv
+    // v4l2_ctrl_ops -> hantro_av1_ctrl_ops in hantro_drv
     f.getName() in [
       "hantro_try_ctrl",
       "hantro_av1_s_ctrl"
+      // g_volatile_ctrl is null
       ]
     or
     // v4l2_ctrl_type_ops in v4l2-ctrls-core
@@ -122,6 +127,19 @@ module Hantro {
       "v4l2_ctrl_type_op_validate"
       ]
     // v4l2_subscribed_event_ops is not triggered by simple decoding
+    or 
+    // v4l2_m2m_ops vpu_m2m_ops in hantro_drv.c
+    f.getName() in [
+      "device_run" // confirmed using kprobe
+      // job_abort and job_ready are null
+      ]
+    or
+    f.getName() in [
+      "rockchip_vpu981_postproc_disable", //confirmed using kprobe
+      "rockchip_vpu981_postproc_enable"
+      ]
+    // v4l2_subdev_video_ops is not reached 
+    // v4l2_subdev_pad_ops is not reached
   }
 
   predicate resolvesTrackedOpsField(Field f, Function impl) {
