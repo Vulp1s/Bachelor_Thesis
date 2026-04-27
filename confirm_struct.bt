@@ -1,0 +1,44 @@
+#!/usr/bin/env bpftrace
+// postproc_ops.bt
+// Offsets:
+//   hantro_ctx.dev          =   0
+//   hantro_dev.variant      = 912
+//   hantro_variant.postproc_ops = 56
+//   postproc_ops.enable     =   0
+//   postproc_ops.disable    =   8
+//   postproc_ops.enum_framesizes = 16
+
+BEGIN { printf("Probing postproc_ops...\n"); }
+
+kprobe:hantro_postproc_enable
+{
+    // arg0 = struct hantro_ctx *ctx
+    $dev     = *(uint64*)(arg0 + 0);    // ctx->dev
+    $variant = *(uint64*)($dev + 912);  // dev->variant
+    $pp_ops  = *(uint64*)($variant + 56); // variant->postproc_ops
+
+    $enable  = *(uint64*)($pp_ops + 0);
+    printf("postproc_ops->enable  → %s\n", ksym($enable));
+}
+
+kprobe:hantro_postproc_disable
+{
+    $dev     = *(uint64*)(arg0 + 0);
+    $variant = *(uint64*)($dev + 912);
+    $pp_ops  = *(uint64*)($variant + 56);
+
+    $disable = *(uint64*)($pp_ops + 8);
+    printf("postproc_ops->disable → %s\n", ksym($disable));
+}
+
+kprobe:hanto_postproc_enum_framesizes
+{
+    $dev     = *(uint64*)(arg0 + 0);
+    $variant = *(uint64*)($dev + 912);
+    $pp_ops  = *(uint64*)($variant + 56);
+
+    $enumfs  = *(uint64*)($pp_ops + 16);
+    printf("postproc_ops->enum_framesizes → %s\n", ksym($enumfs));
+}
+
+END { printf("Done.\n"); }
