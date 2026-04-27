@@ -2,15 +2,12 @@
 
 > Bachelor thesis · ETH Zurich · 2025  
 > Static and dynamic analysis of the Linux Hantro VPU driver on the Rockchip RK3588 SoC,
-> with the goal of extracting its minimal kernel dependency set for bare-metal emulation.
 
 ## Motivation
 
 Extracting hardware drivers from the Linux kernel for bare-metal or emulated environments
 requires a precise understanding of which kernel subsystems the driver actually depends on at
-runtime. Prior work (Narayanan et al., ATC'19; Huang et al., OSDI'22) approximates this
-dependency set statically at the binary or module level, leading to significant
-over-approximation that makes emulation unnecessarily complex.
+runtime. 
 
 This project takes a finer-grained approach: tracing the **exact kernel call paths triggered
 by each ioctl** through the V4L2 → M2M → VB2 → Hantro stack, combining CodeQL static analysis
