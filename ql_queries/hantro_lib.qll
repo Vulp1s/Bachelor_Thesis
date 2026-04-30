@@ -10,7 +10,43 @@ module Hantro {
       path.matches("%verisilicon%") // decoder driver
     )
   }
-
+  /** Canonical struct name for the type that declares f. */
+  bindingset[f]
+  string fieldStructName(Field f) {
+    result = f.getDeclaringType().getUnspecifiedType().(Struct).getName()
+  }
+  predicate isHantroIoctl(Function f){
+    f.getName() in  [
+      "vidioc_querycap",
+      "vidioc_enum_framesizes",
+      "vidioc_try_fmt_cap_mplane",
+      "vidioc_try_fmt_out_mplane",
+      "vidioc_s_fmt_out_mplane",
+      "vidioc_s_fmt_cap_mplane",
+      "vidioc_g_fmt_out_mplane",
+      "vidioc_g_fmt_cap_mplane",
+      "vidioc_enum_fmt_vid_out",
+      "vidioc_enum_fmt_vid_cap",
+      "v4l2_m2m_ioctl_reqbufs",
+      "v4l2_m2m_ioctl_querybuf",
+      "v4l2_m2m_ioctl_qbuf",
+      "v4l2_m2m_ioctl_dqbuf",
+      "v4l2_m2m_ioctl_prepare_buf",
+      "v4l2_m2m_ioctl_create_bufs",
+      "v4l2_m2m_ioctl_remove_bufs",
+      "v4l2_m2m_ioctl_expbuf",
+      "v4l2_ctrl_subscribe_event",
+      "v4l2_event_unsubscribe",
+      "v4l2_m2m_ioctl_streamon",
+      "v4l2_m2m_ioctl_streamoff",
+      "vidioc_g_selection",
+      "vidioc_s_selection",
+      "v4l2_m2m_ioctl_stateless_decoder_cmd",
+      "v4l2_m2m_ioctl_stateless_try_decoder_cmd",
+      "v4l2_m2m_ioctl_try_encoder_cmd",
+      "vidioc_encoder_cmd"
+    ]
+  }
   // we know where this struct is defined and which functions are used by av1 decoding
   predicate isTrackedOpsStruct(string structName) {
     structName in [
@@ -25,7 +61,8 @@ module Hantro {
       "v4l2_m2m_ops",
       "hantro_postproc_ops",
       "v4l2_subdev_video_ops",
-      "v4l2_subdev_pad_ops"
+      "v4l2_subdev_pad_ops",
+      "media_request_object_ops"
     ]
   }
 
@@ -81,36 +118,7 @@ module Hantro {
     ]
     or
     // v4l2_ioctl_ops — hantro_ioctl_ops (hantro_v4l2.c)
-    f.getName() in [
-      "vidioc_querycap",
-      "vidioc_enum_framesizes",
-      "vidioc_try_fmt_cap_mplane",
-      "vidioc_try_fmt_out_mplane",
-      "vidioc_s_fmt_out_mplane",
-      "vidioc_s_fmt_cap_mplane",
-      "vidioc_g_fmt_out_mplane",
-      "vidioc_g_fmt_cap_mplane",
-      "vidioc_enum_fmt_vid_out",
-      "vidioc_enum_fmt_vid_cap",
-      "v4l2_m2m_ioctl_reqbufs",
-      "v4l2_m2m_ioctl_querybuf",
-      "v4l2_m2m_ioctl_qbuf",
-      "v4l2_m2m_ioctl_dqbuf",
-      "v4l2_m2m_ioctl_prepare_buf",
-      "v4l2_m2m_ioctl_create_bufs",
-      "v4l2_m2m_ioctl_remove_bufs",
-      "v4l2_m2m_ioctl_expbuf",
-      "v4l2_ctrl_subscribe_event",
-      "v4l2_event_unsubscribe",
-      "v4l2_m2m_ioctl_streamon",
-      "v4l2_m2m_ioctl_streamoff",
-      "vidioc_g_selection",
-      "vidioc_s_selection",
-      "v4l2_m2m_ioctl_stateless_decoder_cmd",
-      "v4l2_m2m_ioctl_stateless_try_decoder_cmd",
-      "v4l2_m2m_ioctl_try_encoder_cmd",
-      "vidioc_encoder_cmd"
-    ]
+    isHantroIoctl(f)
     or
     // v4l2_ctrl_ops -> hantro_av1_ctrl_ops in hantro_drv
     f.getName() in [
@@ -140,19 +148,34 @@ module Hantro {
       ]
     // v4l2_subdev_video_ops is not reached 
     // v4l2_subdev_pad_ops is not reached
+    or 
+    // both implementations are used!
+    f.getName() in [
+      "vb2_req_unbind",
+      "v4l2_ctrl_request_unbind"
+      ]
   }
 
-  predicate resolvesTrackedOpsField(Field f, Function impl) {
-    // struct is in our discovery list
-    isTrackedOpsStruct(f.getDeclaringType().getUnspecifiedType().(Struct).getName()) and
-    // implementation is on the active RK3588 AV1 path
-    isActiveImplementation(impl) and
-    // static resolution from initializer
+  predicate resolvesOpsField(Field f, Function impl) {
     exists(ClassAggregateLiteral init |
-      init.getType().getUnspecifiedType().(Struct).getName() =
-        f.getDeclaringType().getUnspecifiedType().(Struct).getName() and
-      impl.getAnAccess() = init.getAFieldExpr(f)
+      init.getType().getUnspecifiedType().(Struct) = 
+	f.getDeclaringType().getUnspecifiedType().(Struct) and  // type identity, not name equality
+      impl.getAnAccess() = init.getAFieldExpr(f) and
+      isDriverFile(init.getFile())
     )
+  }
+  predicate resolvesTrackedOpsField(Field f, Function impl) {
+    isTrackedOpsStruct(fieldStructName(f)) and
+    isActiveImplementation(impl) and
+    resolvesOpsField(f, impl)
+  }
+  /**
+   * c is an indirect call through a struct function-pointer field f,
+   * statically resolved to impl via an aggregate initializer.
+   */
+  predicate resolvesFunctionPointerCall(ExprCall c, Field f, Function impl) {
+    c.getExpr().(PointerFieldAccess).getTarget() = f and
+    resolvesOpsField(f, impl)
   }
 
   predicate calls(Function caller, Function callee) {
@@ -161,11 +184,31 @@ module Hantro {
       callee = c.getTarget()
     )
     or
-    exists(ExprCall c, PointerFieldAccess fa, Field f |
+    exists(ExprCall c, Field f |
       c.getEnclosingFunction() = caller and
-      fa = c.getExpr() and
-      f = fa.getTarget() and
-      resolvesTrackedOpsField(f, callee)
+      resolvesFunctionPointerCall(c, f, callee) and
+      resolvesTrackedOpsField(f, callee)  // filtered variant
     )
+  }
+
+  predicate callsUnfiltered(Function caller, Function callee) {
+    exists(Call c |
+      c.getEnclosingFunction() = caller and
+      callee = c.getTarget()
+    )
+    or
+    exists(ExprCall c, Field f |
+      c.getEnclosingFunction() = caller and
+      resolvesFunctionPointerCall(c, f, callee)
+    )
+  }
+  predicate callsInDriver(Function caller, Function callee) {
+    isDriverFile(caller.getFile()) and
+    calls(caller, callee)
+  }
+
+  predicate callsUnfilteredInDriver(Function caller, Function callee) {
+    isDriverFile(caller.getFile()) and
+    callsUnfiltered(caller, callee)
   }
 }
