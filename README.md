@@ -55,13 +55,16 @@ Use tool to visualize call tree
 - [x] CodeQL database built from kernel source
 - [x] Recursive Queries
 - [x] Add filter logic to queries
-- [x] Add query to find structs not filtered yet 
+- [x] Add query to find structs not filtered yet
+- [x] Improved ql queries 
 - [ ] eBPF struct check
-  - [ ] m2m ops stuct
-  - [ ] v4l2_subdev_pad_ops, v4l2_subdev_video_ops
-  - [ ] hantro_postproc_ops
-- [ ] finish filter and validate against manual trace
-- [ ] (optional) find unuesed / little used functions 
+  - [ ] ioctl struct
+  - [ ] hantro_codec_ops
+  - [ ] v4l2_ctrl_type_ops
+  - [ ] media_request_unbind_ops
+- [ ] validate against manual trace
+- [ ] automate dynamic validation
+- [ ] (optional) find unused / little used functions 
 - [ ] visualization
 
 
