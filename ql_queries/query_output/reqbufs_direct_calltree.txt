@@ -1,0 +1,11 @@
+Running query: recursive_function_calls.ql on database /home/till/thesis/hantro-db...
+|  scope   |  caller_func  |   called_func    |         file         |
++----------+---------------+------------------+----------------------+
+| 1_driver | check_fmt     | video_devdata    | v4l2-dev.c           |
+| 1_driver | v4l_reqbufs   | check_fmt        | v4l2-ioctl.c         |
+| 1_driver | v4l_reqbufs   | video_devdata    | v4l2-dev.c           |
+| 2_kernel | v4l_reqbufs   | memset           | string_fortified.h   |
+| 2_kernel | v4l_reqbufs   | generic_test_bit | generic-non-atomic.h |
+| 2_kernel | v4l_reqbufs   | const_test_bit   | generic-non-atomic.h |
+| 2_kernel | video_devdata | iminor           | fs.h                 |
+| 2_kernel | video_devdata | file_inode       | fs.h                 |
