@@ -1,0 +1,872 @@
+#!/usr/bin/env bpftrace
+
+BEGIN {
+    printf("%-40s %s\n", "field", "resolved symbol");
+    printf("%-40s %s\n", "─────", "───────────────");
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_plane_vaddr
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_plane_vaddr
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->vaddr;
+            if (@seen["vb2_mem_ops->vaddr", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->vaddr",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_buf_mem_alloc
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_buf_mem_alloc
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->alloc;
+            if (@seen["vb2_mem_ops->alloc", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->alloc",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->put;
+            if (@seen["vb2_mem_ops->put", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->put",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_plane_cookie
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_plane_cookie
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->cookie;
+            if (@seen["vb2_mem_ops->cookie", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->cookie",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_buf_mem_free
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_buf_mem_free
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->put;
+            if (@seen["vb2_mem_ops->put", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->put",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_buf_mem_prepare
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_buf_mem_prepare
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->prepare;
+            if (@seen["vb2_mem_ops->prepare", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->prepare",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_buf_mem_finish
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_buf_mem_finish
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->finish;
+            if (@seen["vb2_mem_ops->finish", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->finish",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_buffer_in_use
+// ARG:         arg1 = struct vb2_buffer * (vb)
+// ACCESS:      arg1->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_buffer_in_use
+{
+    $base = (struct vb2_buffer *)arg1;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->num_users;
+            if (@seen["vb2_mem_ops->num_users", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->num_users",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_plane_dmabuf_put
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_plane_dmabuf_put
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->detach_dmabuf;
+            if (@seen["vb2_mem_ops->detach_dmabuf", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->detach_dmabuf",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->unmap_dmabuf;
+            if (@seen["vb2_mem_ops->unmap_dmabuf", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->unmap_dmabuf",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_dmabuf
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_dmabuf
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->attach_dmabuf;
+            if (@seen["vb2_mem_ops->attach_dmabuf", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->attach_dmabuf",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->map_dmabuf;
+            if (@seen["vb2_mem_ops->map_dmabuf", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->map_dmabuf",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_userptr
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_userptr
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->get_userptr;
+            if (@seen["vb2_mem_ops->get_userptr", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->get_userptr",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->put_userptr;
+            if (@seen["vb2_mem_ops->put_userptr", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->put_userptr",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_buf_userptr_put
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_buf_userptr_put
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->put_userptr;
+            if (@seen["vb2_mem_ops->put_userptr", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->put_userptr",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_expbuf
+// ARG:         arg3 = struct vb2_buffer * (vb)
+// ACCESS:      arg3->mem_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_expbuf
+{
+    $base = (struct vb2_buffer *)arg3;
+    if ($base != 0) {
+        $ops = $base->mem_ops;
+        if ($ops != 0) {
+            $fn = $ops->get_dmabuf;
+            if (@seen["vb2_mem_ops->get_dmabuf", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_mem_ops->get_dmabuf",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_qbuf
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_qbuf
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->copy_timestamp;
+            if (@seen["vb2_buf_ops->copy_timestamp", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->copy_timestamp",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->fill_user_buffer;
+            if (@seen["vb2_buf_ops->fill_user_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_user_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_dmabuf
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_dmabuf
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_vb2_buffer;
+            if (@seen["vb2_buf_ops->fill_vb2_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_vb2_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_userptr
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_userptr
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_vb2_buffer;
+            if (@seen["vb2_buf_ops->fill_vb2_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_vb2_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_mmap
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_mmap
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_vb2_buffer;
+            if (@seen["vb2_buf_ops->fill_vb2_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_vb2_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_dqbuf
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_dqbuf
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_user_buffer;
+            if (@seen["vb2_buf_ops->fill_user_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_user_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_prepare_buf
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_prepare_buf
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_user_buffer;
+            if (@seen["vb2_buf_ops->fill_user_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_user_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_querybuf
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_querybuf
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->fill_user_buffer;
+            if (@seen["vb2_buf_ops->fill_user_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->fill_user_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_queue_alloc
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_queue_alloc
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->init_buffer;
+            if (@seen["vb2_buf_ops->init_buffer", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->init_buffer",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_get_done_vb
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->buf_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_get_done_vb
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->buf_ops;
+        if ($ops != 0) {
+            $fn = $ops->verify_planes_array;
+            if (@seen["vb2_buf_ops->verify_planes_array", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_buf_ops->verify_planes_array",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __enqueue_in_driver
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__enqueue_in_driver
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_queue;
+            if (@seen["vb2_ops->buf_queue", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_queue",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_queue_cancel
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_queue_cancel
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->stop_streaming;
+            if (@seen["vb2_ops->stop_streaming", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->stop_streaming",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_start_streaming
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_start_streaming
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->start_streaming;
+            if (@seen["vb2_ops->start_streaming", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->start_streaming",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_dmabuf
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_dmabuf
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_prepare;
+            if (@seen["vb2_ops->buf_prepare", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_prepare",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_userptr
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_userptr
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_prepare;
+            if (@seen["vb2_ops->buf_prepare", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_prepare",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __prepare_mmap
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__prepare_mmap
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_prepare;
+            if (@seen["vb2_ops->buf_prepare", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_prepare",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_qbuf
+// ARG:         arg1 = struct vb2_buffer * (vb)
+// ACCESS:      arg1->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_qbuf
+{
+    $base = (struct vb2_buffer *)arg1;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_out_validate;
+            if (@seen["vb2_ops->buf_out_validate", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_out_validate",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __buf_prepare
+// ARG:         arg0 = struct vb2_buffer * (vb)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__buf_prepare
+{
+    $base = (struct vb2_buffer *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->buf_out_validate;
+            if (@seen["vb2_ops->buf_out_validate", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->buf_out_validate",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      __vb2_wait_for_done_vb
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:__vb2_wait_for_done_vb
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->wait_finish;
+            if (@seen["vb2_ops->wait_finish", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->wait_finish",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->wait_prepare;
+            if (@seen["vb2_ops->wait_prepare", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->wait_prepare",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_create_bufs
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_create_bufs
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->queue_setup;
+            if (@seen["vb2_ops->queue_setup", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->queue_setup",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      vb2_core_reqbufs
+// ARG:         arg0 = struct vb2_queue * (q)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:vb2_core_reqbufs
+{
+    $base = (struct vb2_queue *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->queue_setup;
+            if (@seen["vb2_ops->queue_setup", $fn]++ == 0) {
+                printf("%-40s %s\n", "vb2_ops->queue_setup",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      media_request_object_unbind
+// ARG:         arg0 = struct media_request_object * (obj)
+// ACCESS:      arg0->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:media_request_object_unbind
+{
+    $base = (struct media_request_object *)arg0;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->unbind;
+            if (@seen["media_request_object_ops->unbind", $fn]++ == 0) {
+                printf("%-40s %s\n", "media_request_object_ops->unbind",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      try_or_set_cluster
+// ARG:         arg1 = struct v4l2_ctrl * (master)
+// ACCESS:      arg1->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:try_or_set_cluster
+{
+    $base = (struct v4l2_ctrl *)arg1;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->s_ctrl;
+            if (@seen["v4l2_ctrl_ops->s_ctrl", $fn]++ == 0) {
+                printf("%-40s %s\n", "v4l2_ctrl_ops->s_ctrl",
+                       $fn ? ksym($fn) : "NULL");
+            }
+
+            $fn = $ops->try_ctrl;
+            if (@seen["v4l2_ctrl_ops->try_ctrl", $fn]++ == 0) {
+                printf("%-40s %s\n", "v4l2_ctrl_ops->try_ctrl",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      v4l2_ctrl_new
+// ARG:         arg2 = struct const v4l2_ctrl_type_ops * (type_ops)
+// ACCESS:      arg2->type_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:v4l2_ctrl_new
+{
+    $base = (struct const v4l2_ctrl_type_ops *)arg2;
+    if ($base != 0) {
+        $ops = $base->type_ops;
+        if ($ops != 0) {
+            $fn = $ops->init;
+            if (@seen["v4l2_ctrl_type_ops->init", $fn]++ == 0) {
+                printf("%-40s %s\n", "v4l2_ctrl_type_ops->init",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      v4l2_event_subscribe
+// ARG:         arg3 = struct const v4l2_subscribed_event_ops * (ops)
+// ACCESS:      arg3->ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:v4l2_event_subscribe
+{
+    $base = (struct const v4l2_subscribed_event_ops *)arg3;
+    if ($base != 0) {
+        $ops = $base->ops;
+        if ($ops != 0) {
+            $fn = $ops->add;
+            if (@seen["v4l2_subscribed_event_ops->add", $fn]++ == 0) {
+                printf("%-40s %s\n", "v4l2_subscribed_event_ops->add",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      v4l2_m2m_try_run
+// ARG:         arg0 = struct v4l2_m2m_dev * (m2m_dev)
+// ACCESS:      arg0->m2m_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:v4l2_m2m_try_run
+{
+    $base = (struct v4l2_m2m_dev *)arg0;
+    if ($base != 0) {
+        $ops = $base->m2m_ops;
+        if ($ops != 0) {
+            $fn = $ops->device_run;
+            if (@seen["v4l2_m2m_ops->device_run", $fn]++ == 0) {
+                printf("%-40s %s\n", "v4l2_m2m_ops->device_run",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      rockchip_vpu2_vp8_dec_run
+// ARG:         arg0 = struct hantro_ctx * (ctx)
+// ACCESS:      arg0->codec_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:rockchip_vpu2_vp8_dec_run
+{
+    $base = (struct hantro_ctx *)arg0;
+    if ($base != 0) {
+        $ops = $base->codec_ops;
+        if ($ops != 0) {
+            $fn = $ops->reset;
+            if (@seen["hantro_codec_ops->reset", $fn]++ == 0) {
+                printf("%-40s %s\n", "hantro_codec_ops->reset",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+// ─── GENERATED SECTION ──────────────────────────────────────────────────────
+// CALLER:      device_run
+// ARG:         arg0 = struct void * (priv)
+// ACCESS:      arg0->codec_ops
+// BTF:         yes
+// ────────────────────────────────────────────────────────────────────────────
+fentry:device_run
+{
+    $base = (struct void *)arg0;
+    if ($base != 0) {
+        $ops = $base->codec_ops;
+        if ($ops != 0) {
+            $fn = $ops->run;
+            if (@seen["hantro_codec_ops->run", $fn]++ == 0) {
+                printf("%-40s %s\n", "hantro_codec_ops->run",
+                       $fn ? ksym($fn) : "NULL");
+            }
+        }
+    }
+}
+
+END { 
+    clear(@seen);
+    printf("\nDone.\n"); 
+}

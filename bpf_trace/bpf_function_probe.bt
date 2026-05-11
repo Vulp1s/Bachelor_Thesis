@@ -1,0 +1,562 @@
+#!/usr/bin/env bpftrace
+
+BEGIN
+{
+    printf("Tracing ops functions... Hit Ctrl-C to view counts.\n");
+}
+
+kprobe:hantro_g1_h264_dec_run
+{
+    @calls["hantro_codec_ops -> hantro_g1_h264_dec_run"] = count();
+}
+
+kprobe:hantro_g1_mpeg2_dec_run
+{
+    @calls["hantro_codec_ops -> hantro_g1_mpeg2_dec_run"] = count();
+}
+
+kprobe:hantro_g1_reset
+{
+    @calls["hantro_codec_ops -> hantro_g1_reset"] = count();
+}
+
+kprobe:hantro_g1_vp8_dec_run
+{
+    @calls["hantro_codec_ops -> hantro_g1_vp8_dec_run"] = count();
+}
+
+kprobe:hantro_g2_hevc_dec_run
+{
+    @calls["hantro_codec_ops -> hantro_g2_hevc_dec_run"] = count();
+}
+
+kprobe:hantro_g2_vp9_dec_done
+{
+    @calls["hantro_codec_ops -> hantro_g2_vp9_dec_done"] = count();
+}
+
+kprobe:hantro_g2_vp9_dec_run
+{
+    @calls["hantro_codec_ops -> hantro_g2_vp9_dec_run"] = count();
+}
+
+kprobe:hantro_h1_jpeg_enc_done
+{
+    @calls["hantro_codec_ops -> hantro_h1_jpeg_enc_done"] = count();
+}
+
+kprobe:hantro_h1_jpeg_enc_run
+{
+    @calls["hantro_codec_ops -> hantro_h1_jpeg_enc_run"] = count();
+}
+
+kprobe:hantro_h264_dec_exit
+{
+    @calls["hantro_codec_ops -> hantro_h264_dec_exit"] = count();
+}
+
+kprobe:hantro_h264_dec_init
+{
+    @calls["hantro_codec_ops -> hantro_h264_dec_init"] = count();
+}
+
+kprobe:hantro_hevc_dec_exit
+{
+    @calls["hantro_codec_ops -> hantro_hevc_dec_exit"] = count();
+}
+
+kprobe:hantro_hevc_dec_init
+{
+    @calls["hantro_codec_ops -> hantro_hevc_dec_init"] = count();
+}
+
+kprobe:hantro_mpeg2_dec_exit
+{
+    @calls["hantro_codec_ops -> hantro_mpeg2_dec_exit"] = count();
+}
+
+kprobe:hantro_mpeg2_dec_init
+{
+    @calls["hantro_codec_ops -> hantro_mpeg2_dec_init"] = count();
+}
+
+kprobe:hantro_vp8_dec_exit
+{
+    @calls["hantro_codec_ops -> hantro_vp8_dec_exit"] = count();
+}
+
+kprobe:hantro_vp8_dec_init
+{
+    @calls["hantro_codec_ops -> hantro_vp8_dec_init"] = count();
+}
+
+kprobe:hantro_vp9_dec_exit
+{
+    @calls["hantro_codec_ops -> hantro_vp9_dec_exit"] = count();
+}
+
+kprobe:hantro_vp9_dec_init
+{
+    @calls["hantro_codec_ops -> hantro_vp9_dec_init"] = count();
+}
+
+kprobe:imx8m_vpu_g1_reset
+{
+    @calls["hantro_codec_ops -> imx8m_vpu_g1_reset"] = count();
+}
+
+kprobe:rk3066_vpu_dec_reset
+{
+    @calls["hantro_codec_ops -> rk3066_vpu_dec_reset"] = count();
+}
+
+kprobe:rockchip_vpu1_enc_reset
+{
+    @calls["hantro_codec_ops -> rockchip_vpu1_enc_reset"] = count();
+}
+
+kprobe:rockchip_vpu2_dec_reset
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_dec_reset"] = count();
+}
+
+kprobe:rockchip_vpu2_enc_reset
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_enc_reset"] = count();
+}
+
+kprobe:rockchip_vpu2_h264_dec_run
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_h264_dec_run"] = count();
+}
+
+kprobe:rockchip_vpu2_jpeg_enc_done
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_jpeg_enc_done"] = count();
+}
+
+kprobe:rockchip_vpu2_jpeg_enc_run
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_jpeg_enc_run"] = count();
+}
+
+kprobe:rockchip_vpu2_mpeg2_dec_run
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_mpeg2_dec_run"] = count();
+}
+
+kprobe:rockchip_vpu2_vp8_dec_run
+{
+    @calls["hantro_codec_ops -> rockchip_vpu2_vp8_dec_run"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_done
+{
+    @calls["hantro_codec_ops -> rockchip_vpu981_av1_dec_done"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_exit
+{
+    @calls["hantro_codec_ops -> rockchip_vpu981_av1_dec_exit"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_init
+{
+    @calls["hantro_codec_ops -> rockchip_vpu981_av1_dec_init"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_run
+{
+    @calls["hantro_codec_ops -> rockchip_vpu981_av1_dec_run"] = count();
+}
+
+kprobe:stm32mp25_venc_reset
+{
+    @calls["hantro_codec_ops -> stm32mp25_venc_reset"] = count();
+}
+
+kprobe:sunxi_vpu_reset
+{
+    @calls["hantro_codec_ops -> sunxi_vpu_reset"] = count();
+}
+
+kprobe:hantro_postproc_g1_disable
+{
+    @calls["hantro_postproc_ops -> hantro_postproc_g1_disable"] = count();
+}
+
+kprobe:hantro_postproc_g1_enable
+{
+    @calls["hantro_postproc_ops -> hantro_postproc_g1_enable"] = count();
+}
+
+kprobe:hantro_postproc_g2_disable
+{
+    @calls["hantro_postproc_ops -> hantro_postproc_g2_disable"] = count();
+}
+
+kprobe:hantro_postproc_g2_enable
+{
+    @calls["hantro_postproc_ops -> hantro_postproc_g2_enable"] = count();
+}
+
+kprobe:hantro_postproc_g2_enum_framesizes
+{
+    @calls["hantro_postproc_ops -> hantro_postproc_g2_enum_framesizes"] = count();
+}
+
+kprobe:rockchip_vpu981_postproc_disable
+{
+    @calls["hantro_postproc_ops -> rockchip_vpu981_postproc_disable"] = count();
+}
+
+kprobe:rockchip_vpu981_postproc_enable
+{
+    @calls["hantro_postproc_ops -> rockchip_vpu981_postproc_enable"] = count();
+}
+
+kprobe:v4l2_ctrl_request_unbind
+{
+    @calls["media_request_object_ops -> v4l2_ctrl_request_unbind"] = count();
+}
+
+kprobe:vb2_req_unbind
+{
+    @calls["media_request_object_ops -> vb2_req_unbind"] = count();
+}
+
+kprobe:hantro_av1_s_ctrl
+{
+    @calls["v4l2_ctrl_ops -> hantro_av1_s_ctrl"] = count();
+}
+
+kprobe:hantro_hevc_s_ctrl
+{
+    @calls["v4l2_ctrl_ops -> hantro_hevc_s_ctrl"] = count();
+}
+
+kprobe:hantro_jpeg_s_ctrl
+{
+    @calls["v4l2_ctrl_ops -> hantro_jpeg_s_ctrl"] = count();
+}
+
+kprobe:hantro_try_ctrl
+{
+    @calls["v4l2_ctrl_ops -> hantro_try_ctrl"] = count();
+}
+
+kprobe:hantro_vp9_s_ctrl
+{
+    @calls["v4l2_ctrl_ops -> hantro_vp9_s_ctrl"] = count();
+}
+
+kprobe:v4l2_ctrl_type_op_equal
+{
+    @calls["v4l2_ctrl_type_ops -> v4l2_ctrl_type_op_equal"] = count();
+}
+
+kprobe:v4l2_ctrl_type_op_init
+{
+    @calls["v4l2_ctrl_type_ops -> v4l2_ctrl_type_op_init"] = count();
+}
+
+kprobe:device_run
+{
+    @calls["v4l2_m2m_ops -> device_run"] = count();
+}
+
+kprobe:v4l2_ctrl_add_event
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_ctrl_add_event"] = count();
+}
+
+kprobe:v4l2_ctrl_del_event
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_ctrl_del_event"] = count();
+}
+
+kprobe:v4l2_ctrl_merge
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_ctrl_merge"] = count();
+}
+
+kprobe:v4l2_ctrl_replace
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_ctrl_replace"] = count();
+}
+
+kprobe:v4l2_event_src_merge
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_event_src_merge"] = count();
+}
+
+kprobe:v4l2_event_src_replace
+{
+    @calls["v4l2_subscribed_event_ops -> v4l2_event_src_replace"] = count();
+}
+
+kprobe:__copy_timestamp
+{
+    @calls["vb2_buf_ops -> __copy_timestamp"] = count();
+}
+
+kprobe:__fill_v4l2_buffer
+{
+    @calls["vb2_buf_ops -> __fill_v4l2_buffer"] = count();
+}
+
+kprobe:__fill_vb2_buffer
+{
+    @calls["vb2_buf_ops -> __fill_vb2_buffer"] = count();
+}
+
+kprobe:__init_vb2_v4l2_buffer
+{
+    @calls["vb2_buf_ops -> __init_vb2_v4l2_buffer"] = count();
+}
+
+kprobe:__verify_planes_array_core
+{
+    @calls["vb2_buf_ops -> __verify_planes_array_core"] = count();
+}
+
+kprobe:vb2_dc_alloc
+{
+    @calls["vb2_mem_ops -> vb2_dc_alloc"] = count();
+}
+
+kprobe:vb2_dc_attach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dc_attach_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_cookie
+{
+    @calls["vb2_mem_ops -> vb2_dc_cookie"] = count();
+}
+
+kprobe:vb2_dc_detach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dc_detach_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_finish
+{
+    @calls["vb2_mem_ops -> vb2_dc_finish"] = count();
+}
+
+kprobe:vb2_dc_get_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dc_get_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_get_userptr
+{
+    @calls["vb2_mem_ops -> vb2_dc_get_userptr"] = count();
+}
+
+kprobe:vb2_dc_map_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dc_map_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_num_users
+{
+    @calls["vb2_mem_ops -> vb2_dc_num_users"] = count();
+}
+
+kprobe:vb2_dc_prepare
+{
+    @calls["vb2_mem_ops -> vb2_dc_prepare"] = count();
+}
+
+kprobe:vb2_dc_put
+{
+    @calls["vb2_mem_ops -> vb2_dc_put"] = count();
+}
+
+kprobe:vb2_dc_put_userptr
+{
+    @calls["vb2_mem_ops -> vb2_dc_put_userptr"] = count();
+}
+
+kprobe:vb2_dc_unmap_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dc_unmap_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_vaddr
+{
+    @calls["vb2_mem_ops -> vb2_dc_vaddr"] = count();
+}
+
+kprobe:vb2_dma_sg_alloc
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_alloc"] = count();
+}
+
+kprobe:vb2_dma_sg_attach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_attach_dmabuf"] = count();
+}
+
+kprobe:vb2_dma_sg_cookie
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_cookie"] = count();
+}
+
+kprobe:vb2_dma_sg_detach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_detach_dmabuf"] = count();
+}
+
+kprobe:vb2_dma_sg_finish
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_finish"] = count();
+}
+
+kprobe:vb2_dma_sg_get_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_get_dmabuf"] = count();
+}
+
+kprobe:vb2_dma_sg_get_userptr
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_get_userptr"] = count();
+}
+
+kprobe:vb2_dma_sg_map_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_map_dmabuf"] = count();
+}
+
+kprobe:vb2_dma_sg_num_users
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_num_users"] = count();
+}
+
+kprobe:vb2_dma_sg_prepare
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_prepare"] = count();
+}
+
+kprobe:vb2_dma_sg_put
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_put"] = count();
+}
+
+kprobe:vb2_dma_sg_put_userptr
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_put_userptr"] = count();
+}
+
+kprobe:vb2_dma_sg_unmap_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_unmap_dmabuf"] = count();
+}
+
+kprobe:vb2_dma_sg_vaddr
+{
+    @calls["vb2_mem_ops -> vb2_dma_sg_vaddr"] = count();
+}
+
+kprobe:vb2_vmalloc_alloc
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_alloc"] = count();
+}
+
+kprobe:vb2_vmalloc_attach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_attach_dmabuf"] = count();
+}
+
+kprobe:vb2_vmalloc_detach_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_detach_dmabuf"] = count();
+}
+
+kprobe:vb2_vmalloc_get_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_get_dmabuf"] = count();
+}
+
+kprobe:vb2_vmalloc_get_userptr
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_get_userptr"] = count();
+}
+
+kprobe:vb2_vmalloc_map_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_map_dmabuf"] = count();
+}
+
+kprobe:vb2_vmalloc_num_users
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_num_users"] = count();
+}
+
+kprobe:vb2_vmalloc_put
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_put"] = count();
+}
+
+kprobe:vb2_vmalloc_put_userptr
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_put_userptr"] = count();
+}
+
+kprobe:vb2_vmalloc_unmap_dmabuf
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_unmap_dmabuf"] = count();
+}
+
+kprobe:vb2_vmalloc_vaddr
+{
+    @calls["vb2_mem_ops -> vb2_vmalloc_vaddr"] = count();
+}
+
+kprobe:hantro_buf_out_validate
+{
+    @calls["vb2_ops -> hantro_buf_out_validate"] = count();
+}
+
+kprobe:hantro_buf_prepare
+{
+    @calls["vb2_ops -> hantro_buf_prepare"] = count();
+}
+
+kprobe:hantro_buf_queue
+{
+    @calls["vb2_ops -> hantro_buf_queue"] = count();
+}
+
+kprobe:hantro_buf_request_complete
+{
+    @calls["vb2_ops -> hantro_buf_request_complete"] = count();
+}
+
+kprobe:hantro_queue_setup
+{
+    @calls["vb2_ops -> hantro_queue_setup"] = count();
+}
+
+kprobe:hantro_start_streaming
+{
+    @calls["vb2_ops -> hantro_start_streaming"] = count();
+}
+
+kprobe:hantro_stop_streaming
+{
+    @calls["vb2_ops -> hantro_stop_streaming"] = count();
+}
+
+kprobe:vb2_ops_wait_finish
+{
+    @calls["vb2_ops -> vb2_ops_wait_finish"] = count();
+}
+
+kprobe:vb2_ops_wait_prepare
+{
+    @calls["vb2_ops -> vb2_ops_wait_prepare"] = count();
+}
+
