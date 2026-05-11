@@ -2,6 +2,7 @@
 import cpp
 
 module Hantro {
+  // retuns true if the file is in one of the defined directories
   predicate isDriverFile(File f) {
     exists(string path |
       path = f.getAbsolutePath() |
@@ -15,6 +16,26 @@ module Hantro {
   string fieldStructName(Field f) {
     result = f.getDeclaringType().getUnspecifiedType().(Struct).getName()
   }
+  // v4l2 ioctl found in strace of decoding call
+  predicate isV4l2Ioctl(Function f){
+    f.getName() in [
+    "v4l_querycap",
+    "v4l_enum_fmt",
+    "v4l_g_fmt",
+    "v4l_s_fmt",
+    "v4l_reqbufs",
+    "v4l_querybuf",
+    "v4l_stub_expbuf",
+    "v4l_qbuf",
+    "v4l_dqbuf",
+    "v4l_streamon",
+    "v4l_streamoff",
+    "v4l_s_ext_ctrls",
+    "v4l_query_ext_ctrl",
+    "v4l_stub_enum_framesizes"
+    ]
+    }
+  // all available ioctl of hantro drivers
   predicate isHantroIoctl(Function f){
     f.getName() in  [
       "vidioc_querycap",
@@ -47,7 +68,8 @@ module Hantro {
       "vidioc_encoder_cmd"
     ]
   }
-  // we know where this struct is defined and which functions are used by av1 decoding
+  //returns true if we know where this struct is defined and which functions are used by av1 decoding
+  //used to discover untracked structs
   predicate isTrackedOpsStruct(string structName) {
     structName in [
       "vb2_ops",
@@ -66,6 +88,7 @@ module Hantro {
     ]
   }
 
+  // retuns true if the function called is defined for the av1 decoding
   predicate isActiveImplementation(Function f) {
     // vb2_ops — hantro_queue_ops (hantro_v4l2.c)
     f.getName() in [
@@ -82,10 +105,10 @@ module Hantro {
     or
     // hantro_codec_ops — RK3588 AV1 only (rockchip_vpu981_hw_av1_dec.c)
     f.getName() in [
-      "rockchip_vpu981_av1_dec_run",
-      "rockchip_vpu981_av1_dec_init",
-      "rockchip_vpu981_av1_dec_exit",
-      "rockchip_vpu981_av1_dec_done"
+      "rockchip_vpu981_av1_dec_run", //fired
+      "rockchip_vpu981_av1_dec_init", //fired
+      "rockchip_vpu981_av1_dec_exit", //fired
+      "rockchip_vpu981_av1_dec_done" //fired
     ]
     or
     // vb2_mem_ops — dma-contig only (videobuf2-dma-contig.c)
@@ -122,15 +145,15 @@ module Hantro {
     or
     // v4l2_ctrl_ops -> hantro_av1_ctrl_ops in hantro_drv
     f.getName() in [
-      "hantro_try_ctrl",
-      "hantro_av1_s_ctrl"
+      "hantro_try_ctrl", //fired
+      "hantro_av1_s_ctrl" //fired
       // g_volatile_ctrl is null
       ]
     or
     // v4l2_ctrl_type_ops in v4l2-ctrls-core
     f.getName() in [
-      "v4l2_ctrl_type_op_equal",
-      "v4l2_ctrl_type_op_init",
+      "v4l2_ctrl_type_op_equal", //fired
+      "v4l2_ctrl_type_op_init", //fired
       "v4l2_ctrl_type_op_log",
       "v4l2_ctrl_type_op_validate"
       ]
@@ -156,6 +179,7 @@ module Hantro {
       ]
   }
 
+  // finds possible indrect call targets filtered to only get driver path implementations
   predicate resolvesOpsField(Field f, Function impl) {
     exists(ClassAggregateLiteral init |
       init.getType().getUnspecifiedType().(Struct) = 
@@ -164,20 +188,16 @@ module Hantro {
       isDriverFile(init.getFile())
     )
   }
-  predicate resolvesTrackedOpsField(Field f, Function impl) {
-    isTrackedOpsStruct(fieldStructName(f)) and
-    isActiveImplementation(impl) and
-    resolvesOpsField(f, impl)
-  }
   /**
    * c is an indirect call through a struct function-pointer field f,
    * statically resolved to impl via an aggregate initializer.
-   */
+   */ //seems to be redundant
   predicate resolvesFunctionPointerCall(ExprCall c, Field f, Function impl) {
     c.getExpr().(PointerFieldAccess).getTarget() = f and
     resolvesOpsField(f, impl)
   }
 
+  //finds all calls from a function filtered 
   predicate calls(Function caller, Function callee) {
     exists(Call c |
       c.getEnclosingFunction() = caller and
@@ -187,7 +207,7 @@ module Hantro {
     exists(ExprCall c, Field f |
       c.getEnclosingFunction() = caller and
       resolvesFunctionPointerCall(c, f, callee) and
-      resolvesTrackedOpsField(f, callee)  // filtered variant
+      isActiveImplementation(callee)
     )
   }
 
@@ -202,6 +222,7 @@ module Hantro {
       resolvesFunctionPointerCall(c, f, callee)
     )
   }
+
   predicate callsInDriver(Function caller, Function callee) {
     isDriverFile(caller.getFile()) and
     calls(caller, callee)

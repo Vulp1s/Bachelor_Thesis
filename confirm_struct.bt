@@ -1,44 +1,138 @@
 #!/usr/bin/env bpftrace
-// postproc_ops.bt
-// Offsets:
-//   hantro_ctx.dev          =   0
-//   hantro_dev.variant      = 912
-//   hantro_variant.postproc_ops = 56
-//   postproc_ops.enable     =   0
-//   postproc_ops.disable    =   8
-//   postproc_ops.enum_framesizes = 16
+// confirm_all_ops.bt
+// One representative field per unconfirmed ops struct.
+// Replace OFFSET_* with values from pahole above.
+//
+// Known offsets:
+//   vb2_queue.ops              =  48
+//   vb2_queue.mem_ops          =  56
+//   vb2_queue.buf_ops          =  64
+//   hantro_ctx.codec_ops       = 776
+//   hantro_codec_ops.run       =  16
+//   hantro_codec_ops.init      =   0
+//   v4l2_fh.vdev               =  16
+//   video_device.ioctl_ops     = 1128
+//   v4l2_ioctl_ops.vidioc_reqbufs = 400
+//   v4l2_ctrl.ops              =  56
+//   v4l2_ctrl_ops.s_ctrl       =  16
+//   v4l2_ctrl_ops.try_ctrl     =   8
 
-BEGIN { printf("Probing postproc_ops...\n"); }
-
-kprobe:hantro_postproc_enable
-{
-    // arg0 = struct hantro_ctx *ctx
-    $dev     = *(uint64*)(arg0 + 0);    // ctx->dev
-    $variant = *(uint64*)($dev + 912);  // dev->variant
-    $pp_ops  = *(uint64*)($variant + 56); // variant->postproc_ops
-
-    $enable  = *(uint64*)($pp_ops + 0);
-    printf("postproc_ops->enable  → %s\n", ksym($enable));
+#include <media/v4l2-dev.h>
+BEGIN {
+    printf("%-35s %s\n", "ops field", "resolved symbol");
+    printf("%-35s %s\n", "─────────", "───────────────");
 }
 
-kprobe:hantro_postproc_disable
+// ── vb2_ops: confirm buf_prepare ─────────────────────────
+// called from __buf_prepare(struct vb2_buffer *vb)
+// arg0 = vb2_buffer*, vb->vb2_queue is at offset 0
+kprobe:__buf_prepare
 {
-    $dev     = *(uint64*)(arg0 + 0);
-    $variant = *(uint64*)($dev + 912);
-    $pp_ops  = *(uint64*)($variant + 56);
-
-    $disable = *(uint64*)($pp_ops + 8);
-    printf("postproc_ops->disable → %s\n", ksym($disable));
+    $q       = *(uint64*)(arg0 + 0);          // vb->vb2_queue
+    $ops     = *(uint64*)($q + 48);            // q->ops
+    $fn      = *(uint64*)($ops + 40);
+    printf("%-35s %s\n", "vb2_ops->buf_prepare", ksym($fn));
 }
 
-kprobe:hanto_postproc_enum_framesizes
+// ── vb2_ops: confirm buf_queue ───────────────────────────
+kprobe:vb2_core_qbuf
 {
-    $dev     = *(uint64*)(arg0 + 0);
-    $variant = *(uint64*)($dev + 912);
-    $pp_ops  = *(uint64*)($variant + 56);
-
-    $enumfs  = *(uint64*)($pp_ops + 16);
-    printf("postproc_ops->enum_framesizes → %s\n", ksym($enumfs));
+    $ops     = *(uint64*)(arg0 + 48);          // q->ops
+    $fn      = *(uint64*)($ops + 96);
+    printf("%-35s %s\n", "vb2_ops->buf_queue", ksym($fn));
 }
 
-END { printf("Done.\n"); }
+// ── hantro_codec_ops: confirm run and init ───────────────
+// device_run(void *priv) — priv is hantro_ctx*
+kprobe:device_run
+{
+    $codec   = *(uint64*)(arg0 + 776);         // ctx->codec_ops
+    $run     = *(uint64*)($codec + 16);        // codec_ops->run
+    $init    = *(uint64*)($codec + 0);         // codec_ops->init
+    printf("%-35s %s\n", "hantro_codec_ops->run",  ksym($run));
+    printf("%-35s %s\n", "hantro_codec_ops->init", ksym($init));
+}
+
+// ── vb2_mem_ops: confirm prepare ─────────────────────────
+// __prepare_userptr / __prepare_dmabuf / __prepare_mmap
+// all call q->mem_ops->prepare — probe the common wrapper
+kprobe:vb2_core_prepare_buf
+{
+    $mem_ops = *(uint64*)(arg0 + 56);          // q->mem_ops
+    $fn      = *(uint64*)($mem_ops + 40);
+    printf("%-35s %s\n", "vb2_mem_ops->prepare", ksym($fn));
+}
+
+// ── vb2_buf_ops: confirm fill_vb2_buffer ─────────────────
+kprobe:vb2_core_qbuf
+{
+    $buf_ops = *(uint64*)(arg0 + 64);          // q->buf_ops
+    $fn      = *(uint64*)($buf_ops + 24);      // buf_ops->fill_vb2_buffer
+    printf("%-35s %s\n", "vb2_buf_ops->fill_vb2_buffer", ksym($fn));
+}
+
+// v4l2_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+// internally calls __video_do_ioctl(file, cmd, ...)
+// probe __video_do_ioctl which takes vdev directly
+kprobe:v4l2_ioctl
+{
+    // 1. Get the file struct from arg0
+    $file = (struct file *)arg0;
+
+    // 2. Get the video_device from the file's private_data
+    // Note: V4L2 core stores the video_device pointer in private_data
+    $vdev = (struct video_device *)$file->private_data;
+
+    // 3. Get the ioctl_ops from the video_device
+    $iops = $vdev->ioctl_ops;
+
+    if ($iops != 0) {
+        $fn = $iops->vidioc_reqbufs;
+        printf("Device: %s | vidioc_reqbufs: %pS\n", $vdev->name, $fn);
+    } else {
+        printf("No ioctl_ops found for this device\n");
+    }
+}
+
+// ── v4l2_ctrl_ops: confirm s_ctrl ────────────────────────
+// v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, ...)
+// arg0 = ctrl*
+kprobe:v4l2_s_ctrl
+{
+    // v4l2_ctrl is reached via ctrl_handler
+    // probe the internal function that calls s_ctrl directly
+}
+
+kprobe:try_or_set_cluster
+{
+    $ops    = *(uint64*)(arg0 + 56);
+    $s_ctrl = *(uint64*)($ops + 16);
+    $try    = *(uint64*)($ops + 8);
+
+    // only print non-null to reduce noise
+    if ($s_ctrl != 0) {
+        printf("%-35s %s\n", "v4l2_ctrl_ops->s_ctrl", ksym($s_ctrl));
+    }
+    if ($try != 0) {
+        printf("%-35s %s\n", "v4l2_ctrl_ops->try_ctrl", ksym($try));
+    }
+}
+
+// ── v4l2_ctrl_type_ops: confirm remaining ops ────────────
+// v4l2_ctrl_type_op_equal/log/validate called from v4l2_ctrl core
+// probe v4l2_ctrl_new which calls type_ops->init (already confirmed)
+// and also calls type_ops->equal during setup
+kprobe:v4l2_ctrl_new
+{
+    // arg0 = v4l2_ctrl_handler*
+    // arg3 = v4l2_ctrl_type_ops* (4th argument)
+    $type_ops = arg3;
+    $equal    = *(uint64*)($type_ops + 0);
+    $log      = *(uint64*)($type_ops + 16);
+    $validate = *(uint64*)($type_ops + 24);
+    printf("%-35s %s\n", "v4l2_ctrl_type_ops->equal",    ksym($equal));
+    printf("%-35s %s\n", "v4l2_ctrl_type_ops->log",      ksym($log));
+    printf("%-35s %s\n", "v4l2_ctrl_type_ops->validate", ksym($validate));
+}
+
+END { printf("\nDone.\n"); }

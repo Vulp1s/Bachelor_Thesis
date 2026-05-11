@@ -37,24 +37,12 @@ predicate isKernelStruct(Struct s) {
   s.getFile().getAbsolutePath().matches("%/include/%")
 }
 
-predicate isFrameworkStruct(Struct s) {
-  not isDriverStruct(s) and
-  not s.getName() = "" and
-  s.getFile().getAbsolutePath().matches([
-    "%/drivers/media/v4l2-core/%",
-    "%/drivers/media/common/videobuf2/%",
-    "%/drivers/media/mc/%"
-  ])
-}
 
 string structOrigin(Struct s) {
   isDriverStruct(s) and result = "driver"
   or
-  isFrameworkStruct(s) and result = "framework"
-  or
   isKernelStruct(s) and result = "kernel"
   or
-  not isDriverStruct(s) and not isFrameworkStruct(s) and 
   not isKernelStruct(s) and result = "other"
 }
 

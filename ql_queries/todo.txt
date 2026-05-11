@@ -1,7 +1,0 @@
-Running query: find_untracked_calls.ql on database /home/till/thesis/hantro-db...
-|       ops_struct        |     field     |        called_from        |     file      | line |       implementation_func       | implementation_file | impl_line |
-+-------------------------+---------------+---------------------------+---------------+------+---------------------------------+---------------------+-----------+
-| media_entity_operations | link_validate | v4l2_subdev_link_validate | v4l2-subdev.c | 1483 | v4l2_subdev_link_validate       | v4l2-subdev.c       |      1439 |
-| media_entity_operations | link_validate | v4l2_subdev_link_validate | v4l2-subdev.c | 1483 | vsp1_video_link_validate        | vsp1_video.c        |      1088 |
-| media_entity_operations | link_validate | v4l2_subdev_link_validate | v4l2-subdev.c | 1483 | sun6i_csi_capture_link_validate | sun6i_csi_capture.c |       887 |
-| media_entity_operations | link_validate | v4l2_subdev_link_validate | v4l2-subdev.c | 1483 | ti_csi2rx_link_validate         | j721e-csi2rx.c      |       910 |

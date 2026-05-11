@@ -3,7 +3,8 @@ import hantro_lib
 
 from Function entry, Function caller, Function reached, string section
 where
-  Hantro::isHantroIoctl(entry) and
+  //Hantro::isV4l2Ioctl(entry) and
+  entry.getName() = "v4l_reqbufs" and 
   (caller = entry or Hantro::calls+(entry, caller)) and
   Hantro::calls(caller, reached) and
   Hantro::isDriverFile(caller.getFile()) and
