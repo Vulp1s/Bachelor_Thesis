@@ -57,18 +57,7 @@ Use tool to visualize call tree
 - [x] Add filter logic to queries
 - [x] Add query to find structs not filtered yet
 - [x] Improved ql queries 
-- [ ] eBPF struct check
-  - [ ] ioctl struct
-  - [ ] hantro_codec_ops
-  - [ ] v4l2_ctrl_type_ops
-  - [ ] media_request_unbind_ops
-- [ ] validate against manual trace
-- [ ] automate dynamic validation
-- [ ] (optional) find unused / little used functions 
-- [ ] visualization
+- [x] BPF struct check
+- [x] automate dynamic validation
+- [ ] find driver structs modified by kernel
 
-
-## Author
-
-Till Begue — BSc Computer Science, ETH Zurich  
-Thesis supervisor: Clemens Thorens 
