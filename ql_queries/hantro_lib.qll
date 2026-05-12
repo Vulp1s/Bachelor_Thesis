@@ -93,14 +93,14 @@ module Hantro {
     // vb2_ops — hantro_queue_ops (hantro_v4l2.c)
     f.getName() in [
       "hantro_queue_setup", //confirmed using kprobe
-      "hantro_buf_prepare",
-      "hantro_buf_queue",
-      "hantro_buf_out_validate",
-      "hantro_buf_request_complete",
-      "hantro_start_streaming",
-      "hantro_stop_streaming",
-      "vb2_ops_wait_prepare",
-      "vb2_ops_wait_finish"
+      "hantro_buf_prepare", //fired
+      "hantro_buf_queue", //fired
+      "hantro_buf_out_validate", //fired
+      "hantro_buf_request_complete", //not fired
+      "hantro_start_streaming", //fired
+      "hantro_stop_streaming", //fired
+      "vb2_ops_wait_prepare", //not fired
+      "vb2_ops_wait_finish" //not fired
     ]
     or
     // hantro_codec_ops — RK3588 AV1 only (rockchip_vpu981_hw_av1_dec.c)
@@ -115,29 +115,29 @@ module Hantro {
     // dma-sg and vmalloc implementations are excluded by omission
     f.getName() in [
       "vb2_dc_alloc", //confimed using kprobe
-      "vb2_dc_put",
-      "vb2_dc_get_dmabuf",
-      "vb2_dc_cookie",
+      "vb2_dc_put", //fired
+      "vb2_dc_get_dmabuf", //fired
+      "vb2_dc_cookie", //fired
       "vb2_dc_vaddr",
       "vb2_dc_mmap",
-      "vb2_dc_get_userptr",
-      "vb2_dc_put_userptr",
-      "vb2_dc_prepare",
-      "vb2_dc_finish",
-      "vb2_dc_map_dmabuf",
-      "vb2_dc_unmap_dmabuf",
-      "vb2_dc_attach_dmabuf",
-      "vb2_dc_detach_dmabuf",
-      "vb2_dc_num_users"
+      "vb2_dc_get_userptr", //not fired
+      "vb2_dc_put_userptr", //not fired
+      "vb2_dc_prepare", //fired
+      "vb2_dc_finish", //fired
+      "vb2_dc_map_dmabuf", //not fired
+      "vb2_dc_unmap_dmabuf", //not fired
+      "vb2_dc_attach_dmabuf", //not fired
+      "vb2_dc_detach_dmabuf", //not fired
+      "vb2_dc_num_users" //fired
     ]
     or
     // vb2_buf_ops — v4l2_buf_ops (videobuf2-v4l2.c)
     f.getName() in [
-      "__verify_planes_array_core",
+      "__verify_planes_array_core", //fired
       "__init_vb2_v4l2_buffer", //confirmed using kprobe
-      "__fill_v4l2_buffer",
-      "__fill_vb2_buffer",
-      "__copy_timestamp"
+      "__fill_v4l2_buffer", //fired
+      "__fill_vb2_buffer", //fired
+      "__copy_timestamp" //fired
     ]
     or
     // v4l2_ioctl_ops — hantro_ioctl_ops (hantro_v4l2.c)
@@ -154,8 +154,8 @@ module Hantro {
     f.getName() in [
       "v4l2_ctrl_type_op_equal", //fired
       "v4l2_ctrl_type_op_init", //fired
-      "v4l2_ctrl_type_op_log",
-      "v4l2_ctrl_type_op_validate"
+      "v4l2_ctrl_type_op_log", //not found using static trace
+      "v4l2_ctrl_type_op_validate" //fired
       ]
     // v4l2_subscribed_event_ops is not triggered by simple decoding
     or 
@@ -167,12 +167,12 @@ module Hantro {
     or
     f.getName() in [
       "rockchip_vpu981_postproc_disable", //confirmed using kprobe
-      "rockchip_vpu981_postproc_enable"
+      "rockchip_vpu981_postproc_enable" //not fired
       ]
     // v4l2_subdev_video_ops is not reached 
     // v4l2_subdev_pad_ops is not reached
     or 
-    // both implementations are used!
+    // media_request_object_ops both implementations are used! - two different structs
     f.getName() in [
       "vb2_req_unbind",
       "v4l2_ctrl_request_unbind"
@@ -180,11 +180,11 @@ module Hantro {
   }
 
   // finds possible indrect call targets filtered to only get driver path implementations
-  predicate resolvesOpsField(Field f, Function impl) {
+  predicate resolvesOpsField(Field f, Function callee) {
     exists(ClassAggregateLiteral init |
       init.getType().getUnspecifiedType().(Struct) = 
 	f.getDeclaringType().getUnspecifiedType().(Struct) and  // type identity, not name equality
-      impl.getAnAccess() = init.getAFieldExpr(f) and
+      callee.getAnAccess() = init.getAFieldExpr(f) and
       isDriverFile(init.getFile())
     )
   }
@@ -192,9 +192,9 @@ module Hantro {
    * c is an indirect call through a struct function-pointer field f,
    * statically resolved to impl via an aggregate initializer.
    */ //seems to be redundant
-  predicate resolvesFunctionPointerCall(ExprCall c, Field f, Function impl) {
+  predicate resolvesFunctionPointerCall(ExprCall c, Field f, Function callee) {
     c.getExpr().(PointerFieldAccess).getTarget() = f and
-    resolvesOpsField(f, impl)
+    resolvesOpsField(f, callee)
   }
 
   //finds all calls from a function filtered 

@@ -1,0 +1,49 @@
+Attaching 101 probes...
+Tracing ops functions... Hit Ctrl-C to view counts.
+
+
+@hantro_codec_ops[init calls    rockchip_vpu981_av1_dec_init]: 1
+@hantro_codec_ops[exit calls    rockchip_vpu981_av1_dec_exit]: 1
+@hantro_codec_ops[run calls    rockchip_vpu981_av1_dec_run]: 307
+@hantro_codec_ops[done calls    rockchip_vpu981_av1_dec_done]: 307
+@hantro_postproc_ops[disable calls    rockchip_vpu981_postproc_disable]: 307
+@media_request_object_ops[unbind calls    v4l2_ctrl_request_unbind]: 307
+@media_request_object_ops[unbind calls    vb2_req_unbind]: 307
+@v4l2_ctrl_ops[try_ctrl calls    hantro_try_ctrl]: 3
+@v4l2_ctrl_ops[s_ctrl calls    hantro_av1_s_ctrl]: 3
+@v4l2_ctrl_type_ops[init calls    v4l2_ctrl_type_op_init]: 31
+@v4l2_ctrl_type_ops[equal calls    v4l2_ctrl_type_op_equal]: 922
+@v4l2_ctrl_type_ops[validate calls    v4l2_ctrl_type_op_validate]: 923
+@v4l2_ioctl_ops[vidioc_streamon calls    v4l2_m2m_ioctl_streamon]: 2
+@v4l2_ioctl_ops[vidioc_streamoff calls    v4l2_m2m_ioctl_streamoff]: 2
+@v4l2_ioctl_ops[vidioc_querycap calls    vidioc_querycap]: 3
+@v4l2_ioctl_ops[vidioc_reqbufs calls    v4l2_m2m_ioctl_reqbufs]: 4
+@v4l2_ioctl_ops[vidioc_s_fmt_vid_out_mplane calls    vidioc_s_fmt_out_mplane]: 5
+@v4l2_ioctl_ops[vidioc_g_fmt_vid_cap_mplane calls    vidioc_g_fmt_cap_mplane]: 6
+@v4l2_ioctl_ops[vidioc_enum_fmt_vid_out calls    vidioc_enum_fmt_vid_out]: 6
+@v4l2_ioctl_ops[vidioc_enum_fmt_vid_cap calls    vidioc_enum_fmt_vid_cap]: 12
+@v4l2_ioctl_ops[vidioc_enum_framesizes calls    vidioc_enum_framesizes]: 12
+@v4l2_ioctl_ops[vidioc_querybuf calls    v4l2_m2m_ioctl_querybuf]: 14
+@v4l2_ioctl_ops[vidioc_expbuf calls    v4l2_m2m_ioctl_expbuf]: 14
+@v4l2_ioctl_ops[vidioc_qbuf calls    v4l2_m2m_ioctl_qbuf]: 614
+@v4l2_ioctl_ops[vidioc_dqbuf calls    v4l2_m2m_ioctl_dqbuf]: 614
+@v4l2_m2m_ops[device_run calls    device_run]: 307
+
+@vb2_buf_ops[verify_planes_array calls    __verify_planes_array_core]: 614
+@vb2_buf_ops[fill_vb2_buffer calls    __fill_vb2_buffer]: 614
+@vb2_buf_ops[copy_timestamp calls    __copy_timestamp]: 614
+@vb2_buf_ops[init_buffer calls    __init_vb2_v4l2_buffer]: 628
+@vb2_buf_ops[fill_user_buffer calls    __fill_v4l2_buffer]: 1242
+@vb2_mem_ops[get_dmabuf calls    vb2_dc_get_dmabuf]: 14
+@vb2_mem_ops[alloc calls    vb2_dc_alloc]: 14
+@vb2_mem_ops[put calls    vb2_dc_put]: 42
+@vb2_mem_ops[finish calls    vb2_dc_finish]: 614
+@vb2_mem_ops[prepare calls    vb2_dc_prepare]: 614
+@vb2_mem_ops[num_users calls    vb2_dc_num_users]: 1242
+@vb2_mem_ops[cookie calls    vb2_dc_cookie]: 2679
+@vb2_ops[stop_streaming calls    hantro_stop_streaming]: 2
+@vb2_ops[start_streaming calls    hantro_start_streaming]: 2
+@vb2_ops[queue_setup calls    hantro_queue_setup]: 2
+@vb2_ops[buf_prepare calls    hantro_buf_prepare]: 614
+@vb2_ops[buf_out_validate calls    hantro_buf_out_validate]: 614
+@vb2_ops[buf_queue calls    hantro_buf_queue]: 614

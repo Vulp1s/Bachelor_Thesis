@@ -1,0 +1,12 @@
+#include <>//header to resolve struct offsets
+kprobe: // function name
+{
+    // Assuming the first argument (arg0) is the struct pointer 
+    $q = (struct some_struct *)arg0;
+
+    // Check what function the ops struct is actually wired up to use
+    $func_ptr = $q->ops->function; //edit to match function pointer
+
+    printf("function called. ptr points to: %s\n", ksym($func_ptr));
+}
+

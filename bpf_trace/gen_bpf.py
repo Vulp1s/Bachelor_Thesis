@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+
 import sys
 import os
+
 
 def get_traceable_functions(filepath="/sys/kernel/debug/tracing/available_filter_functions"):
     """Reads the kernel's available filter functions and returns them as a set."""
@@ -22,6 +24,7 @@ def get_traceable_functions(filepath="/sys/kernel/debug/tracing/available_filter
         print(f"// WARNING: {filepath} not found. Assuming all are traceable.", file=sys.stderr)
         return None
 
+
 def generate_bpftrace(input_file):
     implementations = set()
 
@@ -33,17 +36,19 @@ def generate_bpftrace(input_file):
                     continue
                 
                 parts = [p.strip() for p in line.split('|')]
-                if len(parts) < 8:
+                if len(parts) < 7:
                     continue
                 
                 struct_name = parts[1]
-                func_name = parts[7]
+                field_name = parts[2]
+                func_name = parts[6]
                 
+                # Skip header row
                 if struct_name == 'ops_struct':
                     continue
                 
-                if struct_name and func_name:
-                    implementations.add((struct_name, func_name))
+                if struct_name and field_name and func_name:
+                    implementations.add((struct_name, field_name, func_name))
                     
     except FileNotFoundError:
         print(f"Error: Could not find file '{input_file}'", file=sys.stderr)
@@ -56,24 +61,31 @@ def generate_bpftrace(input_file):
     skipped_functions = set()
 
     # Filter out untraceable functions
-    for struct_name, func_name in implementations:
+    for struct_name, field_name, func_name in implementations:
         if traceable_funcs is not None and func_name not in traceable_funcs:
-            skipped_functions.add((struct_name, func_name))
+            skipped_functions.add((struct_name, field_name, func_name))
         else:
-            valid_implementations.add((struct_name, func_name))
+            valid_implementations.add((struct_name, field_name, func_name))
+
+    # Group by struct
+    by_struct = {}
+    for struct_name, field_name, func_name in valid_implementations:
+        if struct_name not in by_struct:
+            by_struct[struct_name] = []
+        by_struct[struct_name].append((field_name, func_name))
 
     # --- Generate the bpftrace script output ---
     print("#!/usr/bin/env bpftrace\n")
     
-    # Print skipped functions as a comment block so it doesn't break the bpftrace syntax
+    # Print skipped functions as a comment block
     if skipped_functions:
         print("/*")
         print(" * SKIPPED FUNCTIONS")
         print(" * The following functions were not found in available_filter_functions")
         print(" * and have been excluded to prevent kprobe attach errors:")
         print(" *")
-        for struct_name, func_name in sorted(skipped_functions):
-            print(f" * - {func_name} (from {struct_name})")
+        for struct_name, field_name, func_name in sorted(skipped_functions):
+            print(f" * - {struct_name}->{field_name} calls {func_name}")
         print(" */\n")
 
     print("BEGIN")
@@ -81,12 +93,15 @@ def generate_bpftrace(input_file):
     print('    printf("Tracing ops functions... Hit Ctrl-C to view counts.\\n");')
     print("}\n")
 
-    # Generate probes only for valid functions
-    for struct_name, func_name in sorted(valid_implementations):
-        print(f"kprobe:{func_name}")
-        print("{")
-        print(f'    @calls["{struct_name} -> {func_name}"] = count();')
-        print("}\n")
+    # Generate probes grouped by struct
+    for struct_name in sorted(by_struct.keys()):
+        print(f"// {struct_name}:")
+        for field_name, func_name in sorted(by_struct[struct_name]):
+            print(f"kprobe:{func_name}")
+            print("{")
+            print(f'    @{struct_name}["{field_name} calls    {func_name}"] = count();')
+            print("}\n")
+
 
 if __name__ == '__main__':
     filename = sys.argv[1] if len(sys.argv) > 1 else 'todo.txt'
