@@ -17,7 +17,7 @@ implemented in v4l2_buf_ops in videobuf2-v4l2
 ### vb2_queue
 - is part of vb2_buffer
 # v4l2 ioctl
-## v4l_reqbuf
+## v4l_reqbufs
 static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops, struct file *file, void *fh, void *arg)
 
 Structs:
@@ -44,20 +44,7 @@ Structs:
 calls:
 - video_devdata
 indirect:
-- ops->vidioc_g_fmt_vid_cap: NULL
-- ops->vidioc_g_fmt_vid_cap_mplane: calls vidioc_g_fmt_cap_mplane
-- ops->vidioc_g_fmt_vid_overlay: NULL
-- ops->vidioc_g_fmt_vid_out: NULL
-- ops->vidioc_g_fmt_vid_out_mplane: calls vidioc_g_fmt_out_mplane
-- ops->vidioc_g_fmt_vid_out_overlay: NULL
-- ops->vidioc_g_fmt_vbi_cap: NULL
-- ops->vidioc_g_fmt_vbi_out: NULL
-- ops->vidioc_g_fmt_sliced_vbi_cap: NULL
-- ops->vidioc_g_fmt_sliced_vbi_out: NULL
-- ops->vidioc_g_fmt_sdr_cap: NULL
-- ops->vidioc_g_fmt_sdr_out: NULL
-- ops->vidioc_g_fmt_meta_cap: NULL
-- ops->vidioc_g_fmt_meta_out: NULL
+only checks if null
 
 # v4l2-dev
 ## video_devdata
@@ -95,37 +82,6 @@ structs:
 calls:
 - dma_free_coherent
 
-## rockchip_vpu981_av1_dec_init
-int rockchip_vpu981_av1_dec_init(struct hantro_ctx *ctx)
-
-structs:
-- struct hantro_ctx: read
-- struct hantro_dev: read (ctx->dev)
-- struct hantro_av1_dec_hw_ctx: write (ctx->av1_dec)
-- struct hantro_aux_buf: write (nested members like global_model, tile_info, etc.)
-- struct rockchip_av1_film_grain: read (via sizeof)
-- struct av1cdfs: read (via sizeof)
-
-calls:
-- memset
-- dma_alloc_coherent
-- ALIGN
-- rockchip_av1_set_default_cdfs
-
-# rockchip_av1_entropymode
-
-## rockchip_av1_set_default_cdfs
-void rockchip_av1_set_default_cdfs(struct av1cdfs *cdfs, struct mvcdfs *cdfs_ndvc)
-
-structs:
-- struct av1cdfs: write
-- struct mvcdfs: write
-calls:
-- memcpy
-
-globals/constants:
-- default_partition_cdf: read
-- default_intra_ext_tx0_cdf: read
 
 # Hantro
 ## v4l2_ioctl_ops
@@ -134,31 +90,6 @@ const struct v4l2_ioctl_ops hantro_ioctl_ops = {
 calls:
 - v4l2_m2m_ioctl_reqbufs
 
-## vidioc_g_fmt_out_mplane
-static int vidioc_g_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-structs:
-- file unused
-- v4l2_format read
-- v4l2_pix_format_mplane write
-- hantro_ctx created
-calls:
-fh_to_ctx
-
-## vidioc_g_fmt_out_mplane
-static int vidioc_g_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-
-structs:
-- struct v4l2_format: write
-- struct v4l2_pix_format_mplane: write (via f->fmt.pix_mp)
-- struct hantro_ctx: read
-
-calls:
-- fh_to_ctx
-- vpu_debug
-## fh_to_ctx
-static __always_inline struct hantro_ctx *fh_to_ctx(struct v4l2_fh *fh)
-structs:
-- v4l2_fh upcast into hantro_ctx
 ## hantro_stop_streaming
 static void hantro_stop_streaming(struct vb2_queue *q)
 
@@ -174,9 +105,9 @@ calls:
 - hantro_vq_is_coded
 - hantro_postproc_free
 - V4L2_TYPE_IS_OUTPUT
-- hantro_return_bufs
-- v4l2_m2m_src_buf_remove
-- v4l2_m2m_dst_buf_remove
+- hantro_return_bufs 
+    - v4l2_m2m_src_buf_remove 
+    - v4l2_m2m_dst_buf_remove 
 - v4l2_m2m_update_stop_streaming_state
 - v4l2_m2m_has_stopped
 - v4l2_event_queue_fh
@@ -1000,12 +931,6 @@ structs:
 - vb2_buffer write
 indirect:
 - bufop init_buffer calls __init_vb2_v4l2_buffer
-
-## vb2_core_dqbuf
-int vb2_core_dqbuf(struct vb2_queue *q, unsigned int *pindex, void *pb)
-
-calls:
-- init_buffer (driver)
 
 ## vb2_buffer_done
 void vb2_buffer_done(struct vb2_buffer *vb, enum vb2_buffer_state state)
