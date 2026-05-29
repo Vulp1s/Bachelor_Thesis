@@ -6,9 +6,16 @@ module Hantro {
   predicate isDriverFile(File f) {
     exists(string path |
       path = f.getAbsolutePath() |
-      path.matches("%drivers/media/v4l2-core%") or // v4l2-core
-      path.matches("%videobuf2%") or // videobuf2
       path.matches("%verisilicon%") // decoder driver
+    )
+  }
+  
+  predicate isSubsystemFile(File f) {
+    exists(string path |
+      path = f.getAbsolutePath() |
+      path.matches("%verisilicon%") or // decoder driver
+      path.matches("%videobuf2%") or 
+      path.matches("%v4l2-core%")
     )
   }
   /** Canonical struct name for the type that declares f. */
@@ -118,8 +125,8 @@ module Hantro {
       "vb2_dc_put", //fired
       "vb2_dc_get_dmabuf", //fired
       "vb2_dc_cookie", //fired
-      "vb2_dc_vaddr",
-      "vb2_dc_mmap",
+      "vb2_dc_vaddr", //not traceable
+      "vb2_dc_mmap", //not traceable
       "vb2_dc_get_userptr", //not fired
       "vb2_dc_put_userptr", //not fired
       "vb2_dc_prepare", //fired
@@ -185,47 +192,91 @@ module Hantro {
       init.getType().getUnspecifiedType().(Struct) = 
 	f.getDeclaringType().getUnspecifiedType().(Struct) and  // type identity, not name equality
       callee.getAnAccess() = init.getAFieldExpr(f) and
-      isDriverFile(init.getFile())
+      isSubsystemFile(init.getFile())
     )
   }
   /**
    * c is an indirect call through a struct function-pointer field f,
-   * statically resolved to impl via an aggregate initializer.
-   */ //seems to be redundant
+   * statically resolved to impl via an aggregate initializer.**/
   predicate resolvesFunctionPointerCall(ExprCall c, Field f, Function callee) {
     c.getExpr().(PointerFieldAccess).getTarget() = f and
     resolvesOpsField(f, callee)
   }
 
-  //finds all calls from a function filtered 
+  /**
+   * Resolves a two-level indirect call (e.g., sev->ops->replace(...))
+   * to its target implementation using struct initialization.
+   */
+  predicate resolvesTwoLevelOpsCall(ExprCall c, Field f, Function callee) {
+    exists(PointerFieldAccess outer, PointerFieldAccess inner, Field opsField, Struct opsStruct |
+      outer = c.getExpr() and
+      f = outer.getTarget() and 
+      inner = outer.getQualifier() and
+      opsField = inner.getTarget() and
+      
+      opsStruct = opsField.getType().getUnspecifiedType().(PointerType).getBaseType().(Struct) and
+      
+      exists(ClassAggregateLiteral init |
+	init.getType().getUnspecifiedType().(Struct) = opsStruct and
+	callee.getAnAccess() = init.getAFieldExpr(f) and
+	Hantro::isSubsystemFile(init.getFile()) 
+      )
+    )
+  }
+
   predicate calls(Function caller, Function callee) {
+    // Case 1: direct call
     exists(Call c |
       c.getEnclosingFunction() = caller and
       callee = c.getTarget()
     )
     or
-    exists(ExprCall c, Field f |
+    // Case 2: indirect call through tracked ops struct field (one level)
+    // e.g. q->ops->queue_setup(...)
+    exists(ExprCall c, PointerFieldAccess fa, Field f |
       c.getEnclosingFunction() = caller and
-      resolvesFunctionPointerCall(c, f, callee) and
-      isActiveImplementation(callee)
+      fa = c.getExpr() and
+      f = fa.getTarget() and
+      Hantro::resolvesOpsField(f, callee) and
+      Hantro::isActiveImplementation(callee)
+    )
+    or
+    // Case 3: function pointer passed as argument
+    // e.g. hantro_return_bufs(q, v4l2_m2m_dst_buf_remove)
+    exists(FunctionCall site, FunctionAccess fa |
+      site.getEnclosingFunction() = caller and
+      fa = site.getArgument(_) and
+      callee = fa.getTarget()
     )
   }
 
   predicate callsUnfiltered(Function caller, Function callee) {
+    // Case 1: direct call
     exists(Call c |
       c.getEnclosingFunction() = caller and
       callee = c.getTarget()
     )
     or
+    // Case 2: indirect call through tracked ops struct field (one level)
+    // e.g. q->ops->queue_setup(...)
     exists(ExprCall c, Field f |
       c.getEnclosingFunction() = caller and
       resolvesFunctionPointerCall(c, f, callee)
     )
+    or
+    // Case 3: function pointer passed as argument
+    // e.g. hantro_return_bufs(q, v4l2_m2m_dst_buf_remove)
+    exists(FunctionCall site, FunctionAccess fa |
+      site.getEnclosingFunction() = caller and
+      fa = site.getArgument(_) and
+      callee = fa.getTarget()
+    )
   }
 
-  predicate callsInDriver(Function caller, Function callee) {
-    isDriverFile(caller.getFile()) and
-    calls(caller, callee)
+
+  predicate callsInSubsystem(Function caller, Function calleee) {
+    isSubsystemFile(caller.getFile()) and
+    calls(caller, calleee)
   }
 
   predicate callsUnfilteredInDriver(Function caller, Function callee) {
