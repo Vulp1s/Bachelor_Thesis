@@ -59,5 +59,7 @@ Use tool to visualize call tree
 - [x] Improved ql queries 
 - [x] BPF struct check
 - [x] automate dynamic validation
-- [ ] find driver structs modified by kernel
+- [x] find driver structs modified by kernel
+- [ ] visualize results
+- [ ] clean up and refactor code
 
