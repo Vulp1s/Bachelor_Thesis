@@ -1,0 +1,48 @@
+Running query: taint_structs.ql on database /home/till/thesis/hantro-db...
+|         struct_name          | access_type |
++------------------------------+-------------+
+| (unnamed class/struct/union) | Write       |
+| (unnamed class/struct/union) | Read        |
+| device                       | Read        |
+| device_driver                | Read        |
+| media_request_object         | Read        |
+| v4l2_capability              | Read        |
+| v4l2_ctrl                    | Read        |
+| v4l2_ctrl_av1_sequence       | Read        |
+| v4l2_ctrl_h264_sps           | Read        |
+| v4l2_ctrl_hevc_sps           | Read        |
+| v4l2_ctrl_mpeg2_picture      | Read        |
+| v4l2_ctrl_mpeg2_quantisation | Read        |
+| v4l2_ctrl_mpeg2_sequence     | Read        |
+| v4l2_ctrl_ptr                | Read        |
+| v4l2_ctrl_vp8_frame          | Read        |
+| v4l2_ctrl_vp9_compressed_hdr | Read        |
+| v4l2_ctrl_vp9_frame          | Read        |
+| v4l2_fh                      | Read        |
+| v4l2_fmtdesc                 | Write       |
+| v4l2_fmtdesc                 | Read        |
+| v4l2_format                  | Read        |
+| v4l2_frmsizeenum             | Read        |
+| v4l2_frmsizeenum             | Write       |
+| v4l2_h264_reflist_builder    | Read        |
+| v4l2_m2m_buffer              | Read        |
+| v4l2_m2m_ctx                 | Read        |
+| v4l2_m2m_queue_ctx           | Read        |
+| v4l2_pix_format_mplane       | Write       |
+| v4l2_pix_format_mplane       | Read        |
+| v4l2_plane_pix_format        | Read        |
+| v4l2_plane_pix_format        | Write       |
+| v4l2_vp8_entropy             | Read        |
+| v4l2_vp8_entropy_coder_state | Read        |
+| v4l2_vp8_loop_filter         | Read        |
+| v4l2_vp8_quantization        | Read        |
+| v4l2_vp8_segment             | Read        |
+| v4l2_vp9_loop_filter         | Read        |
+| v4l2_vp9_quantization        | Read        |
+| v4l2_vp9_segmentation        | Read        |
+| vb2_buffer                   | Read        |
+| vb2_queue                    | Read        |
+| vb2_queue                    | Write       |
+| vb2_v4l2_buffer              | Read        |
+| vb2_v4l2_buffer              | Write       |
+| video_device                 | Read        |

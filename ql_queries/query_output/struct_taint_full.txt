@@ -1,0 +1,253 @@
+Running query: taint_structs.ql on database /home/till/thesis/hantro-db...
+|    flow_direction     |             source_function             |              sink_function               |         struct_name          | access_type |             file             |
++-----------------------+-----------------------------------------+------------------------------------------+------------------------------+-------------+------------------------------+
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_out                       | (unnamed class/struct/union) | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_cap                       | (unnamed class/struct/union) | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_start_prepare_run                 | media_request_object         | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_end_prepare_run                   | media_request_object         | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_get_ctrl                          | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_hevc_s_ctrl                       | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_av1_s_ctrl                        | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_vp9_s_ctrl                        | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_jpeg_s_ctrl                       | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Driver query → Kernel | start_prepare_run                       | start_prepare_run                        | v4l2_ctrl                    | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl_av1_sequence       | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_av1_s_ctrl                        | v4l2_ctrl_av1_sequence       | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl_h264_sps           | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_hevc_validate_sps                 | v4l2_ctrl_hevc_sps           | Read        | hantro_hevc.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl_hevc_sps           | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_hevc_s_ctrl                       | v4l2_ctrl_hevc_sps           | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_mpeg2_dec_run                  | v4l2_ctrl_mpeg2_picture      | Read        | hantro_g1_mpeg2_dec.c        |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_mpeg2_dec_run              | v4l2_ctrl_mpeg2_picture      | Read        | rockchip_vpu2_hw_mpeg2_dec.c |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_mpeg2_dec_set_buffers      | v4l2_ctrl_mpeg2_picture      | Read        | rockchip_vpu2_hw_mpeg2_dec.c |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_mpeg2_dec_set_buffers          | v4l2_ctrl_mpeg2_picture      | Read        | hantro_g1_mpeg2_dec.c        |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_mpeg2_dec_copy_qtable             | v4l2_ctrl_mpeg2_quantisation | Read        | hantro_mpeg2.c               |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_mpeg2_dec_run                  | v4l2_ctrl_mpeg2_sequence     | Read        | hantro_g1_mpeg2_dec.c        |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_mpeg2_dec_run              | v4l2_ctrl_mpeg2_sequence     | Read        | rockchip_vpu2_hw_mpeg2_dec.c |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_get_ctrl                          | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_hevc_s_ctrl                       | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_vp9_s_ctrl                        | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_av1_s_ctrl                        | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Driver query → Kernel | start_prepare_run                       | start_prepare_run                        | v4l2_ctrl_ptr                | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_tap                                  | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_ref                                  | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_buffers                              | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_buffers                              | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_parts                                | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_tap                                  | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_ref                                  | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_vp8_prob_update                   | v4l2_ctrl_vp8_frame          | Read        | hantro_vp8.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_vp8_dec_run                | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_vp8_dec_run                    | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_ctrl_vp8_frame          | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_parts                                | v4l2_ctrl_vp8_frame          | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | start_prepare_run                       | start_prepare_run                        | v4l2_ctrl_vp9_compressed_hdr | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_vp9_s_ctrl                        | v4l2_ctrl_vp9_frame          | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_ctrl                          | v4l2_ctrl_vp9_frame          | Read        | hantro_drv.c                 |
+| Driver query → Kernel | start_prepare_run                       | config_bit_depth                         | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_tiles                             | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_segment                           | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_loop_filter                       | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_quant                             | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_others                            | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_compound_reference                | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_probs                             | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_seg_map                           | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_source                            | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_registers                         | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | update_dec_buf_info                      | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | update_ctx_cur_info                      | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_ref_registers                     | v4l2_ctrl_vp9_frame          | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_out                       | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_cap                       | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_request           | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_hold_capture_buf  | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_h264_dec_prepare_run              | v4l2_h264_reflist_builder    | Read        | hantro_h264.c                |
+| Driver query → Kernel | hantro_get_dst_buf                      | set_ref                                  | v4l2_m2m_buffer              | Read        | hantro_g2_hevc_dec.c         |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_registers                         | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | update_ctx_cur_info                      | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_output                            | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_ref                               | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_ref_registers                     | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_ref                               | v4l2_m2m_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_request           | v4l2_m2m_ctx                 | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_request           | v4l2_m2m_queue_ctx           | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_out                       | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_out                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_try_fmt                           | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_reset_raw_fmt                     | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_vp8_prob_update                   | v4l2_vp8_entropy             | Read        | hantro_vp8.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_vp8_dec_run                    | v4l2_vp8_entropy_coder_state | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_vp8_dec_run                | v4l2_vp8_entropy_coder_state | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_vp8_loop_filter         | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_vp8_loop_filter         | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_g1_vp8_dec_run                    | v4l2_vp8_loop_filter         | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | rockchip_vpu2_vp8_dec_run                | v4l2_vp8_loop_filter         | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_vp8_quantization        | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_vp8_quantization        | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_vp8_segment             | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_vp8_prob_update                   | v4l2_vp8_segment             | Read        | hantro_vp8.c                 |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_lf                                   | v4l2_vp8_segment             | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_buffers                              | v4l2_vp8_segment             | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_vp8_segment             | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_buffers                              | v4l2_vp8_segment             | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | cfg_qp                                   | v4l2_vp8_segment             | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_segment                           | v4l2_vp9_loop_filter         | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_loop_filter                       | v4l2_vp9_loop_filter         | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_quant                             | v4l2_vp9_quantization        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | is_lossless                              | v4l2_vp9_quantization        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_segment                           | v4l2_vp9_quantization        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_probs                             | v4l2_vp9_segmentation        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | update_feat_and_flag                     | v4l2_vp9_segmentation        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_segment                           | v4l2_vp9_segmentation        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | start_prepare_run                       | config_registers                         | v4l2_vp9_segmentation        | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_ctrl                         | hantro_get_dec_buf_addr                  | vb2_buffer                   | Read        | hantro.h                     |
+| Driver query → Kernel | hantro_get_dst_buf                      | update_ctx_cur_info                      | vb2_buffer                   | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_get_dec_buf_addr                  | vb2_buffer                   | Read        | hantro.h                     |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_end_prepare_run                   | vb2_buffer                   | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | rockchip_vpu981_av1_dec_run              | vb2_buffer                   | Read        | rockchip_vpu981_hw_av1_dec.c |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_start_prepare_run                 | vb2_buffer                   | Read        | hantro_drv.c                 |
+| Driver query → Kernel | start_prepare_run                       | hantro_get_dec_buf_addr                  | vb2_buffer                   | Read        | hantro.h                     |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_hold_capture_buf  | vb2_queue                    | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_update_requires_request           | vb2_queue                    | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_update_requires_hold_capture_buf | hantro_update_requires_hold_capture_buf  | vb2_queue                    | Write       | hantro_v4l2.c                |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_h1_jpeg_enc_run                   | vb2_v4l2_buffer              | Read        | hantro_h1_jpeg_enc.c         |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_postproc_g2_enable                | vb2_v4l2_buffer              | Read        | hantro_postproc.c            |
+| Driver query → Kernel | hantro_get_dst_buf                      | rockchip_vpu981_postproc_enable          | vb2_v4l2_buffer              | Read        | rockchip_vpu981_hw_av1_dec.c |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_registers                         | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | rockchip_vpu2_jpeg_enc_run               | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_jpeg_enc.c  |
+| Driver query → Kernel | hantro_get_dst_buf                      | get_ref_buf                              | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | set_buffers                              | vb2_v4l2_buffer              | Read        | hantro_g1_h264_dec.c         |
+| Driver query → Kernel | hantro_get_dst_buf                      | set_buffers                              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_h264_dec.c  |
+| Driver query → Kernel | hantro_get_dst_buf                      | set_ref                                  | vb2_v4l2_buffer              | Read        | hantro_g2_hevc_dec.c         |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_h1_jpeg_enc_done                  | vb2_v4l2_buffer              | Read        | hantro_h1_jpeg_enc.c         |
+| Driver query → Kernel | hantro_get_dst_buf                      | cfg_buffers                              | vb2_v4l2_buffer              | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | cfg_buffers                              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_dst_buf                      | cfg_ref                                  | vb2_v4l2_buffer              | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | cfg_ref                                  | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_ref_registers                     | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | rockchip_vpu2_jpeg_enc_done              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_jpeg_enc.c  |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_ref                               | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_h264_get_ref_buf                  | vb2_v4l2_buffer              | Read        | hantro_h264.c                |
+| Driver query → Kernel | hantro_get_dst_buf                      | config_output                            | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | hantro_g1_mpeg2_dec_run                  | vb2_v4l2_buffer              | Read        | hantro_g1_mpeg2_dec.c        |
+| Driver query → Kernel | hantro_get_dst_buf                      | update_ctx_cur_info                      | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_dst_buf                      | rockchip_vpu2_mpeg2_dec_run              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_mpeg2_dec.c |
+| Driver query → Kernel | hantro_get_src_buf                      | rockchip_vpu2_mpeg2_dec_run              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_mpeg2_dec.c |
+| Driver query → Kernel | hantro_get_src_buf                      | set_params                               | vb2_v4l2_buffer              | Read        | hantro_g1_h264_dec.c         |
+| Driver query → Kernel | hantro_get_src_buf                      | set_params                               | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_h264_dec.c  |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_g1_mpeg2_dec_run                  | vb2_v4l2_buffer              | Read        | hantro_g1_mpeg2_dec.c        |
+| Driver query → Kernel | hantro_get_src_buf                      | rockchip_vpu981_av1_dec_run              | vb2_v4l2_buffer              | Read        | rockchip_vpu981_hw_av1_dec.c |
+| Driver query → Kernel | hantro_get_src_buf                      | rockchip_vpu2_jpeg_enc_run               | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_jpeg_enc.c  |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_h1_jpeg_enc_run                   | vb2_v4l2_buffer              | Read        | hantro_h1_jpeg_enc.c         |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_end_prepare_run                   | vb2_v4l2_buffer              | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | hantro_start_prepare_run                 | vb2_v4l2_buffer              | Read        | hantro_drv.c                 |
+| Driver query → Kernel | hantro_get_src_buf                      | set_buffers                              | vb2_v4l2_buffer              | Read        | hantro_g1_h264_dec.c         |
+| Driver query → Kernel | hantro_get_src_buf                      | set_buffers                              | vb2_v4l2_buffer              | Read        | hantro_g2_hevc_dec.c         |
+| Driver query → Kernel | hantro_get_src_buf                      | set_buffers                              | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_h264_dec.c  |
+| Driver query → Kernel | hantro_get_src_buf                      | cfg_parts                                | vb2_v4l2_buffer              | Read        | hantro_g1_vp8_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | cfg_parts                                | vb2_v4l2_buffer              | Read        | rockchip_vpu2_hw_vp8_dec.c   |
+| Driver query → Kernel | hantro_get_src_buf                      | config_source                            | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | hantro_get_src_buf                      | rockchip_vpu981_av1_dec_set_input_buffer | vb2_v4l2_buffer              | Read        | rockchip_vpu981_hw_av1_dec.c |
+| Driver query → Kernel | hantro_job_finish_no_pm                 | hantro_job_finish_no_pm                  | vb2_v4l2_buffer              | Write       | hantro_drv.c                 |
+| Driver query → Kernel | hantro_postproc_g1_enable               | hantro_postproc_g1_enable                | vb2_v4l2_buffer              | Read        | hantro_postproc.c            |
+| Driver query → Kernel | start_prepare_run                       | config_ref                               | vb2_v4l2_buffer              | Read        | hantro_g2_vp9_dec.c          |
+| Driver query → Kernel | vidioc_querycap                         | vidioc_querycap                          | video_device                 | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_out                       | (unnamed class/struct/union) | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_cap                       | (unnamed class/struct/union) | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_framesizes                  | vidioc_enum_framesizes                   | (unnamed class/struct/union) | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_g_fmt_cap_mplane                 | vidioc_g_fmt_cap_mplane                  | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_g_fmt_out_mplane                 | vidioc_g_fmt_out_mplane                  | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_set_fmt_cap                       | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | vidioc_s_fmt_cap_mplane                  | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | vidioc_s_fmt_out_mplane                  | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_set_fmt_out                       | (unnamed class/struct/union) | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_querycap                         | vidioc_querycap                          | device                       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_querycap                         | vidioc_querycap                          | device_driver                | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_request_complete             | hantro_buf_request_complete              | media_request_object         | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_return_bufs                       | media_request_object         | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_querycap                         | vidioc_querycap                          | v4l2_capability              | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_av1_s_ctrl                        | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl                    | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_av1_s_ctrl                        | v4l2_ctrl_av1_sequence       | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl_av1_sequence       | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl_h264_sps           | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl_hevc_sps           | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_av1_s_ctrl                        | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl_ptr                | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_try_ctrl                         | hantro_try_ctrl                          | v4l2_ctrl_vp9_frame          | Read        | hantro_drv.c                 |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_cap                       | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_out                       | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_hold_capture_buf  | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_request           | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_queue                        | hantro_buf_queue                         | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_start_streaming                   | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_postproc_init                     | v4l2_fh                      | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_return_bufs                       | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_postproc_free                     | v4l2_fh                      | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_stop_streaming                    | v4l2_fh                      | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_fmt_vid_cap                 | vidioc_enum_fmt                          | v4l2_fmtdesc                 | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_fmt_vid_cap                 | vidioc_enum_fmt                          | v4l2_fmtdesc                 | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_fmt_vid_out                 | vidioc_enum_fmt                          | v4l2_fmtdesc                 | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_fmt_vid_out                 | vidioc_enum_fmt                          | v4l2_fmtdesc                 | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_g_fmt_cap_mplane                 | vidioc_g_fmt_cap_mplane                  | v4l2_format                  | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_g_fmt_out_mplane                 | vidioc_g_fmt_out_mplane                  | v4l2_format                  | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | vidioc_s_fmt_cap_mplane                  | v4l2_format                  | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | vidioc_s_fmt_out_mplane                  | v4l2_format                  | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_framesizes                  | vidioc_enum_framesizes                   | v4l2_frmsizeenum             | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_enum_framesizes                  | vidioc_enum_framesizes                   | v4l2_frmsizeenum             | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_request           | v4l2_m2m_ctx                 | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_postproc_init                     | v4l2_m2m_ctx                 | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_postproc_free                     | v4l2_m2m_ctx                 | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_request           | v4l2_m2m_queue_ctx           | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_postproc_init                     | v4l2_m2m_queue_ctx           | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_postproc_free                     | v4l2_m2m_queue_ctx           | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_out                       | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_try_fmt                           | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_out                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_reset_raw_fmt                     | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_plane_check                   | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_prepare                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_queue_setup                      | hantro_queue_setup                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_postproc_buffer_size              | v4l2_pix_format_mplane       | Read        | hantro_postproc.c            |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_try_fmt                           | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_try_fmt                           | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_set_fmt_out                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_try_fmt                           | v4l2_pix_format_mplane       | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_try_fmt                           | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_set_fmt_cap                       | v4l2_pix_format_mplane       | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_prepare                       | v4l2_plane_pix_format        | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_plane_check                   | v4l2_plane_pix_format        | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_queue_setup                      | hantro_queue_setup                       | v4l2_plane_pix_format        | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_try_fmt                           | v4l2_plane_pix_format        | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_cap_mplane                 | hantro_try_fmt                           | v4l2_plane_pix_format        | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_try_fmt                           | v4l2_plane_pix_format        | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_s_fmt_out_mplane                 | hantro_try_fmt                           | v4l2_plane_pix_format        | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_prepare                       | vb2_buffer                   | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_queue                        | hantro_buf_queue                         | vb2_buffer                   | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_request_complete             | hantro_buf_request_complete              | vb2_buffer                   | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_return_bufs                       | vb2_buffer                   | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_request           | vb2_queue                    | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_av1_s_ctrl                       | hantro_update_requires_hold_capture_buf  | vb2_queue                    | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_prepare                      | hantro_buf_prepare                       | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_queue                        | hantro_buf_queue                         | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_queue_setup                      | hantro_queue_setup                       | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_start_streaming                   | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_start_streaming                  | hantro_vq_is_coded                       | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_postproc_free                     | vb2_queue                    | Read        | hantro_postproc.c            |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_stop_streaming                    | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_vq_is_coded                       | vb2_queue                    | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_out_validate                 | hantro_buf_out_validate                  | vb2_v4l2_buffer              | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_buf_queue                        | hantro_buf_queue                         | vb2_v4l2_buffer              | Write       | hantro_v4l2.c                |
+| Kernel → Driver       | hantro_stop_streaming                   | hantro_return_bufs                       | vb2_v4l2_buffer              | Read        | hantro_v4l2.c                |
+| Kernel → Driver       | vidioc_querycap                         | vidioc_querycap                          | video_device                 | Read        | hantro_v4l2.c                |

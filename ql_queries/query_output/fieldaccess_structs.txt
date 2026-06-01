@@ -1,0 +1,42 @@
+Running query: struct_fieldaccess.ql on database /home/till/thesis/hantro-db...
+|          struct_name           | access_type |
++--------------------------------+-------------+
+| device                         | Read-only   |
+| (unnamed class/struct/union)   | Modified    |
+| (unnamed class/struct/union)   | Read-only   |
+| device_driver                  | Read-only   |
+| vb2_buffer                     | Read-only   |
+| vb2_queue                      | Modified    |
+| vb2_queue                      | Read-only   |
+| video_device                   | Read-only   |
+| v4l2_fh                        | Read-only   |
+| vb2_v4l2_buffer                | Modified    |
+| vb2_v4l2_buffer                | Read-only   |
+| media_request_object           | Read-only   |
+| v4l2_ctrl                      | Read-only   |
+| v4l2_ctrl_ptr                  | Read-only   |
+| v4l2_m2m_ctx                   | Read-only   |
+| v4l2_ctrl_av1_film_grain       | Read-only   |
+| v4l2_ctrl_av1_frame            | Read-only   |
+| v4l2_av1_tile_info             | Read-only   |
+| v4l2_av1_quantization          | Read-only   |
+| v4l2_av1_loop_filter           | Read-only   |
+| v4l2_av1_segmentation          | Read-only   |
+| v4l2_av1_cdef                  | Read-only   |
+| v4l2_av1_loop_restoration      | Read-only   |
+| v4l2_av1_global_motion         | Read-only   |
+| v4l2_ctrl_av1_tile_group_entry | Read-only   |
+| v4l2_ctrl_av1_sequence         | Read-only   |
+| v4l2_ctrl_vp9_frame            | Read-only   |
+| v4l2_ctrl_hevc_sps             | Read-only   |
+| v4l2_ctrl_h264_sps             | Read-only   |
+| v4l2_format                    | Read-only   |
+| v4l2_pix_format_mplane         | Modified    |
+| v4l2_pix_format_mplane         | Read-only   |
+| v4l2_plane_pix_format          | Modified    |
+| v4l2_plane_pix_format          | Read-only   |
+| v4l2_frmsizeenum               | Modified    |
+| v4l2_fmtdesc                   | Modified    |
+| v4l2_capability                | Read-only   |
+| v4l2_m2m_buffer                | Read-only   |
+| v4l2_m2m_queue_ctx             | Read-only   |
