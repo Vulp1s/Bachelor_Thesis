@@ -15,7 +15,7 @@ module Hantro {
       path = f.getAbsolutePath() |
       path.matches("%verisilicon%") or // decoder driver
       path.matches("%videobuf2%") or 
-      path.matches("%v4l2-core%")
+      path.matches("%v4l2%")
     )
   }
   /** Canonical struct name for the type that declares f. */

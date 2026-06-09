@@ -1,0 +1,207 @@
+digraph G {
+    // --- Global Configuration ---
+    graph [
+        rankdir=TB;
+        nodesep=0.25;
+        ranksep=0.4;
+        pad=0.5;
+        bgcolor=white;
+        splines=true;
+        compound=true; // Allows cross-cluster routing optimization
+    ]
+    
+    node [
+        fontname="Helvetica,Arial,sans-serif";
+        fontsize=11;
+        shape=box;
+        style="filled,rounded";
+        fillcolor="#f9f9f9";
+        color="#444444";
+        penwidth=1.2;
+    ]
+    
+    edge [
+        fontname="Helvetica,Arial,sans-serif";
+        fontsize=9;
+        color="#444444";
+        arrowsize=0.7;
+        penwidth=1.0;
+    ]
+
+    subgraph cluster_1_Driver {
+        label = "1_Driver";
+        color = blue;
+        "hantro_v4l2.c";
+        "hantro_hw.h";
+        "hantro.h";
+        "hantro_postproc.c";
+        "rockchip_av1_entropymode.c";
+        "v4l2-mem2mem.c";
+        "hantro_drv.c";
+        "videobuf2-core.c";
+        "v4l2-ctrls-core.c";
+        "v4l2-ioctl.c";
+        "rockchip_av1_filmgrain.c";
+        "rockchip_vpu981_hw_av1_dec.c";
+    }
+
+    subgraph cluster_2_SubSystem {
+        label = "2_SubSystem";
+        color = green;
+        "v4l2-ctrls-request.c";
+        "v4l2-ctrls-defs.c";
+        "v4l2-event.c";
+        "v4l2-ctrls-api.c";
+        "v4l2-ctrls-priv.h";
+        "v4l2-common.c";
+        "v4l2-dev.c";
+        "videobuf2-v4l2.c";
+        "videobuf2-core.h";
+        "videobuf2-dma-contig.h";
+        "videobuf2-dma-contig.c";
+        "frame_vector.c";
+        "videobuf2-memops.c";
+    }
+
+    subgraph cluster_3_kernel {
+        label = "3_kernel";
+        color = red;
+        "bug.h";
+        "v4l2-mem2mem.h";
+        "pm_runtime.h";
+        "clk.h";
+        "spinlock.h";
+        "qspinlock.h";
+        "list.h";
+        "slab.h";
+        "media-request.h";
+        "v4l2-dev.h";
+        "v4l2-ctrls.h";
+        "printk.h";
+        "mutex.h";
+        "err.h";
+        "v4l2-common.h";
+        "string_fortified.h";
+        "dma-mapping.h";
+        "generic-non-atomic.h";
+        "string.h";
+        "kernel.h";
+        "bitops.h";
+        "instrumented-atomic.h";
+        "bitmap.h";
+        "atomic-instrumented.h";
+        "dma-buf.h";
+        "vb2.h";
+        "cache.h";
+        "refcount.h";
+        "frame_vector.h";
+        "io.h";
+        "mm.h";
+        "overflow.h";
+        "mmzone.h";
+    }
+
+    // Unique Call Relations (Labels & Self-Loops Removed)
+    "hantro_v4l2.c" -> "hantro_hw.h";
+    "hantro.h" -> "hantro_postproc.c";
+    "v4l2-mem2mem.c" -> "hantro_drv.c";
+    "videobuf2-core.c" -> "hantro_v4l2.c";
+    "v4l2-ctrls-core.c" -> "hantro_drv.c";
+    "v4l2-ioctl.c" -> "hantro_v4l2.c";
+    "hantro_postproc.c" -> "hantro_hw.h";
+    "hantro_postproc.c" -> "hantro_v4l2.c";
+    "hantro_postproc.c" -> "rockchip_vpu981_hw_av1_dec.c";
+    "hantro_v4l2.c" -> "hantro.h";
+    "hantro_v4l2.c" -> "hantro_postproc.c";
+    "hantro_v4l2.c" -> "rockchip_vpu981_hw_av1_dec.c";
+    "rockchip_vpu981_hw_av1_dec.c" -> "hantro.h";
+    "rockchip_vpu981_hw_av1_dec.c" -> "rockchip_av1_entropymode.c";
+    "rockchip_vpu981_hw_av1_dec.c" -> "rockchip_av1_filmgrain.c";
+    "rockchip_vpu981_hw_av1_dec.c" -> "hantro_drv.c";
+    "hantro_drv.c" -> "hantro.h";
+    "hantro_drv.c" -> "hantro_postproc.c";
+    "hantro_drv.c" -> "hantro_v4l2.c";
+    "hantro_drv.c" -> "rockchip_vpu981_hw_av1_dec.c";
+    "v4l2-ctrls-core.c" -> "v4l2-ctrls-request.c";
+    "hantro_drv.c" -> "v4l2-event.c";
+    "hantro_drv.c" -> "v4l2-ctrls-request.c";
+    "hantro_drv.c" -> "v4l2-ctrls-core.c";
+    "hantro_drv.c" -> "v4l2-mem2mem.c";
+    "rockchip_vpu981_hw_av1_dec.c" -> "videobuf2-core.h";
+    "rockchip_vpu981_hw_av1_dec.c" -> "videobuf2-dma-contig.h";
+    "v4l2-ctrls-request.c" -> "v4l2-ctrls-api.c";
+    "v4l2-ctrls-request.c" -> "v4l2-ctrls-core.c";
+    "v4l2-ctrls-request.c" -> "v4l2-ctrls-priv.h";
+    "hantro_v4l2.c" -> "v4l2-event.c";
+    "hantro_v4l2.c" -> "v4l2-ctrls-request.c";
+    "hantro_v4l2.c" -> "v4l2-common.c";
+    "hantro_v4l2.c" -> "v4l2-dev.c";
+    "videobuf2-v4l2.c" -> "videobuf2-core.c";
+    "videobuf2-v4l2.c" -> "videobuf2-core.h";
+    "v4l2-ioctl.c" -> "v4l2-ctrls-api.c";
+    "v4l2-ioctl.c" -> "v4l2-dev.c";
+    "v4l2-ioctl.c" -> "v4l2-mem2mem.c";
+    "v4l2-ctrls-core.c" -> "v4l2-ctrls-priv.h";
+    "videobuf2-core.c" -> "videobuf2-dma-contig.c";
+    "videobuf2-core.c" -> "videobuf2-core.h";
+    "videobuf2-dma-contig.c" -> "frame_vector.c";
+    "videobuf2-dma-contig.c" -> "videobuf2-memops.c";
+    "v4l2-mem2mem.c" -> "videobuf2-v4l2.c";
+    "hantro.h" -> "videobuf2-dma-contig.h";
+    
+    // Core Subsystem & Kernel Connections
+    "videobuf2-core.c" -> "bug.h";
+    "hantro_drv.c" -> "v4l2-mem2mem.h";
+    "hantro_drv.c" -> "pm_runtime.h";
+    "hantro_drv.c" -> "clk.h";
+    "v4l2-event.c" -> "spinlock.h";
+    "v4l2-event.c" -> "qspinlock.h";
+    "v4l2-event.c" -> "list.h";
+    "v4l2-ctrls-request.c" -> "slab.h";
+    "v4l2-ctrls-request.c" -> "media-request.h";
+    "v4l2-ctrls-request.c" -> "v4l2-dev.h";
+    "v4l2-ctrls-request.c" -> "v4l2-ctrls.h";
+    "videobuf2-v4l2.c" -> "printk.h";
+    "videobuf2-v4l2.c" -> "mutex.h";
+    "videobuf2-v4l2.c" -> "err.h";
+    "videobuf2-v4l2.c" -> "v4l2-common.h";
+    "videobuf2-v4l2.c" -> "string_fortified.h";
+    "hantro_postproc.c" -> "dma-mapping.h";
+    "v4l2-ioctl.c" -> "generic-non-atomic.h";
+    "v4l2-ctrls-core.c" -> "list.h";
+    "v4l2-ctrls-core.c" -> "string.h";
+    "v4l2-ctrls-core.c" -> "mutex.h";
+    "v4l2-ctrls-core.c" -> "slab.h";
+    "videobuf2-core.c" -> "list.h";
+    "videobuf2-core.c" -> "generic-non-atomic.h";
+    "videobuf2-core.c" -> "kernel.h";
+    "videobuf2-core.c" -> "printk.h";
+    "frame_vector.c" -> "bitops.h";
+    "videobuf2-core.c" -> "instrumented-atomic.h";
+    "videobuf2-core.c" -> "bitmap.h";
+    "videobuf2-core.c" -> "atomic-instrumented.h";
+    "videobuf2-core.c" -> "dma-buf.h";
+    "videobuf2-core.c" -> "vb2.h";
+    "videobuf2-dma-contig.c" -> "cache.h";
+    "videobuf2-dma-contig.c" -> "printk.h";
+    "videobuf2-dma-contig.c" -> "refcount.h";
+    "videobuf2-dma-contig.c" -> "frame_vector.h";
+    "videobuf2-dma-contig.c" -> "dma-buf.h";
+    "v4l2-mem2mem.c" -> "list.h";
+    "v4l2-mem2mem.c" -> "kernel.h";
+    "v4l2-mem2mem.c" -> "printk.h";
+    "v4l2-mem2mem.c" -> "atomic-instrumented.h";
+    "v4l2-mem2mem.c" -> "spinlock.h";
+    "videobuf2-core.h" -> "generic-non-atomic.h";
+    "videobuf2-core.h" -> "bitmap.h";
+    "hantro.h" -> "printk.h";
+    "hantro.h" -> "io.h";
+    "hantro.h" -> "v4l2-mem2mem.h";
+    "rockchip_vpu981_hw_av1_dec.c" -> "slab.h";
+    "rockchip_vpu981_hw_av1_dec.c" -> "printk.h";
+    "frame_vector.c" -> "frame_vector.h";
+    "frame_vector.c" -> "mm.h";
+    "frame_vector.c" -> "overflow.h";
+    "frame_vector.c" -> "slab.h";
+    "frame_vector.c" -> "mmzone.h";
+}

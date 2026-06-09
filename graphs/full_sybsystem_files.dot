@@ -1,0 +1,112 @@
+digraph HighResCombinedFlow {
+    graph [
+        rankdir=TB;
+        nodesep=0.5;
+        ranksep=0.7;
+        pad=0.5;
+        bgcolor=white;
+        splines=true;
+    ]
+    
+    node [
+        fontname="Helvetica,Arial,sans-serif";
+        fontsize=16;
+        shape=box;
+        style="filled,rounded";
+        fillcolor="#f8f9fa";
+        color="#495057";
+        penwidth=1.2;
+    ]
+
+    // ==========================================
+    // NODE DEFINITIONS (High Resolution)
+    // ==========================================
+    // V4L2 Framework
+    V4L2_IOCTL      [label="V4L2 ioctl\n(v4l2-ioctl)"];
+    V4L2_CORE       [label="V4L2 Core\n(v4l2-dev/common)"];
+    V4L2_MC         [label="V4L2 Media Controller\n(v4l2-mc)"];
+    V4L2_CTRLS      [label="V4L2 ctrls"];
+    V4L2_EVENT      [label="V4L2 event"];
+    V4L2_M2M        [label="V4L2 m2m"];
+
+    // Videobuf2 Framework
+    VB2_CORE        [label="VB2 Core"];
+    VB2_V4L2        [label="VB2 v4l2"];
+    VB2_DMA_CONTIG  [label="VB2 DMA contig"];
+    VB2_MEMOPS      [label="VB2 Memops\n(memops/frame_vector)"];
+
+    // Hantro Driver
+    HANTRO_V4L2     [label="Hantro V4L2 IF\n(hantro_v4l2)"];
+    HANTRO_CORE     [label="Hantro Core\n(hantro_drv/hw)"];
+    HANTRO_POSTPROC [label="Hantro Postproc\n(hantro_postproc)"];
+
+    // AV1 Decoder (VPU981)
+    VPU981_CORE     [label="AV1 Dec Core\n(vpu981_hw_av1_dec)"];
+    VPU981_HELPERS  [label="AV1 Helpers\n(entropy/filmgrain)"];
+
+    // ==========================================
+    // LAYER 1: Core reqbufs Flow (Bold, Solid Lines)
+    // ==========================================
+    edge [color="#1a1a1a", penwidth=2.5, style=solid, arrowsize=0.9];
+    
+    V4L2_IOCTL -> V4L2_CORE;
+    V4L2_IOCTL -> V4L2_M2M;
+    
+    V4L2_M2M -> VB2_CORE;
+    V4L2_M2M -> VB2_V4L2;
+    
+    VB2_CORE -> HANTRO_V4L2;
+    VB2_CORE -> VB2_DMA_CONTIG;
+    VB2_CORE -> VB2_V4L2;
+    
+    VB2_DMA_CONTIG -> VB2_MEMOPS;
+    VB2_V4L2 -> VB2_CORE;
+
+    HANTRO_V4L2 -> HANTRO_POSTPROC;
+    HANTRO_V4L2 -> V4L2_CTRLS;
+    HANTRO_V4L2 -> V4L2_EVENT;
+    HANTRO_V4L2 -> V4L2_M2M;
+    HANTRO_V4L2 -> VB2_CORE;
+    HANTRO_V4L2 -> VPU981_CORE;
+
+    // ==========================================
+    // LAYER 2: Extended Full Coverage (Muted, Dashed Lines)
+    // ==========================================
+    edge [color="#444444", penwidth=1.5, style=dashed, arrowsize=0.8];
+    
+    V4L2_IOCTL -> HANTRO_V4L2;
+    V4L2_IOCTL -> V4L2_CTRLS;
+    V4L2_IOCTL -> V4L2_MC;
+    
+    V4L2_CTRLS -> HANTRO_CORE;
+    V4L2_CTRLS -> V4L2_CORE;
+    V4L2_CTRLS -> V4L2_EVENT;
+    
+    V4L2_M2M -> HANTRO_CORE;
+    V4L2_M2M -> V4L2_CORE;
+    
+    VB2_DMA_CONTIG -> VB2_CORE;
+    VB2_V4L2 -> V4L2_CORE;
+
+    HANTRO_V4L2 -> HANTRO_CORE;
+    HANTRO_V4L2 -> V4L2_CORE;
+    
+    HANTRO_CORE -> HANTRO_POSTPROC;
+    HANTRO_CORE -> HANTRO_V4L2;
+    HANTRO_CORE -> V4L2_CTRLS;
+    HANTRO_CORE -> V4L2_EVENT;
+    HANTRO_CORE -> V4L2_M2M;
+    HANTRO_CORE -> VB2_DMA_CONTIG;
+    HANTRO_CORE -> VPU981_CORE;
+    
+    HANTRO_POSTPROC -> HANTRO_CORE;
+    HANTRO_POSTPROC -> HANTRO_V4L2;
+    HANTRO_POSTPROC -> V4L2_CORE;
+    HANTRO_POSTPROC -> VB2_CORE;
+    HANTRO_POSTPROC -> VPU981_CORE;
+    
+    VPU981_CORE -> HANTRO_CORE;
+    VPU981_CORE -> VB2_CORE;
+    VPU981_CORE -> VB2_DMA_CONTIG;
+    VPU981_CORE -> VPU981_HELPERS;
+}

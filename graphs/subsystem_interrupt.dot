@@ -1,0 +1,31 @@
+digraph Hantro_AV1_Simplified {
+    rankdir=TB;
+    fontname="Helvetica,Arial,sans-serif";
+    node [fontname="Helvetica,Arial,sans-serif", shape=box, style="rounded,filled", fillcolor="#F5F5F5", color="#333333"];
+    edge [fontname="Helvetica,Arial,sans-serif", fontsize=10, penwidth=1.5];
+
+    label="Simplified AV1 Decode & Interrupt Path";
+    labelloc="t";
+    fontsize=14;
+
+    // Subsystem Nodes
+    gst        [label="GStreamer\n(v4l2slav1dec Element)", fillcolor="#BBDEFB", color="#0D47A1", style="deep,rounded,filled"];
+    v4l2       [label="V4L2 Subsystem\n(System Calls & Request API)", fillcolor="#C8E6C9", color="#1B5E20"];
+    vb2        [label="videobuf2 (vb2) Core\n(Kernel Buffer State Manager)", fillcolor="#E1BEE7", color="#4A148C"];
+    hantro_drv [label="Hantro Driver\n(IRQ Handler & HW Control)", fillcolor="#FFF9C4", color="#F57F17"];
+    hantro_hw  [label="Hantro AV1 Hardware\n(Silicon ASIC)", shape=cylinder, fillcolor="#FFCCBC", color="#E65100"];
+
+    // --- DOWNWARD FLOW: SUBMITTING WORK (Blue/Dark Edges) ---
+    gst -> v4l2 [label=" 1. Send Bitstream\n(VIDIOC_QBUF)", color="#0D47A1"];
+    v4l2 -> vb2 [label=" 2. Track Buffer State\n(Preps DMA memory)", color="#1B5E20"];
+    vb2 -> hantro_drv [label=" 3. Enqueue to Driver\n(Ready for HW)", color="#4A148C"];
+    hantro_drv -> hantro_hw [label=" 4. Start Decode\n(Program Registers)", color="#F57F17"];
+
+    // --- UPWARD FLOW: THE INTERRUPT TRACE (Bold Red Edges) ---
+    edge [color="#D32F2F", fontcolor="#D32F2F", penwidth=2.5];
+    
+    hantro_hw -> hantro_drv [label=" 5. HW Interrupt\n(Frame Done)"];
+    hantro_drv -> vb2 [label=" 6. Call vb2_buffer_done()\n(State: ACTIVE -> DONE)"];
+    vb2 -> v4l2 [label=" 7. Wake up Wait Queues\n(Signals poll)"];
+    v4l2 -> gst [label=" 8. Unblock & Dequeue\n(VIDIOC_DQBUF)"];
+}

@@ -39,6 +39,7 @@ predicate isReachableFromIoctl(Function f) {
     Hantro::isV4l2Ioctl(entry)            and
     Hantro::calls*(entry, caller)          and
     Hantro::calls(caller, reached)         and
+    Hantro::isSubsystemFile(caller.getFile()) and
     (f = caller or f = reached)
   )
 }
