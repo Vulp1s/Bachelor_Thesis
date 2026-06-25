@@ -1,0 +1,1212 @@
+#!/usr/bin/env bpftrace
+
+/*
+ * SKIPPED FUNCTIONS
+ * Not found in available_filter_functions; excluded to prevent attach errors:
+ *
+ *   __buffers_in_use
+ *   __prepare_mmap
+ *   __setup_offsets
+ *   __vb2_buf_mem_alloc
+ *   __vb2_buf_mem_finish
+ *   __vb2_buf_mem_prepare
+ *   __vb2_buf_userptr_put
+ *   __vb2_dqbuf
+ *   __vb2_free_mem
+ *   __vb2_get_done_vb
+ *   __vb2_plane_dmabuf_put
+ *   __vb2_wait_for_done_vb
+ *   __verify_dmabuf_ops
+ *   __verify_length
+ *   __verify_mmap_ops
+ *   __verify_userptr_ops
+ *   clamp
+ *   clamp_roundup
+ *   class_check
+ *   cluster_changed
+ *   fh_to_ctx
+ *   fill_event
+ *   find_private_ref
+ *   handler_set_err
+ *   hantro_av1_mv_size
+ *   hantro_av1_num_sbs
+ *   hantro_buf_plane_check
+ *   hantro_check_depth_match
+ *   hantro_get_dec_buf_addr
+ *   hantro_get_dst_buf
+ *   hantro_get_formats
+ *   hantro_get_postproc_formats
+ *   hantro_get_src_buf
+ *   hantro_h264_mv_size
+ *   hantro_hevc_chroma_compressed_size
+ *   hantro_hevc_compressed_size
+ *   hantro_hevc_luma_compressed_size
+ *   hantro_hevc_mv_size
+ *   hantro_job_finish
+ *   hantro_job_finish_no_pm
+ *   hantro_reg_write
+ *   hantro_reset_fmt
+ *   hantro_return_bufs
+ *   hantro_update_requires_hold_capture_buf
+ *   hantro_update_requires_request
+ *   hantro_vp9_mv_size
+ *   hantro_vp9_num_sbs
+ *   hantro_vq_is_coded
+ *   hantro_write_addr
+ *   init_buffer_cache_hints
+ *   is_cur_manual
+ *   is_new_manual
+ *   new_to_user
+ *   node2id
+ *   ptr_to_ptr
+ *   rockchip_av1_get_q_ctx
+ *   rockchip_av1_get_random_number
+ *   rockchip_av1_init_random_generator
+ *   rockchip_av1_update_random_register
+ *   rockchip_vpu981_av1_dec_chroma_size
+ *   rockchip_vpu981_av1_dec_clean_refs
+ *   rockchip_vpu981_av1_dec_frame_ref
+ *   rockchip_vpu981_av1_dec_frame_unref
+ *   rockchip_vpu981_av1_dec_get_msb
+ *   rockchip_vpu981_av1_dec_get_shear_params
+ *   rockchip_vpu981_av1_dec_init_scaling_function
+ *   rockchip_vpu981_av1_dec_luma_size
+ *   rockchip_vpu981_av1_dec_resolve_divisor_32
+ *   rockchip_vpu981_av1_dec_set_frame_sign_bias
+ *   rockchip_vpu981_av1_dec_set_global_model
+ *   rockchip_vpu981_av1_dec_set_input_buffer
+ *   rockchip_vpu981_av1_dec_set_lr
+ *   rockchip_vpu981_av1_dec_set_output_buffer
+ *   rockchip_vpu981_av1_dec_set_picture_dimensions
+ *   rockchip_vpu981_av1_dec_set_prob
+ *   rockchip_vpu981_av1_dec_set_reference_frames
+ *   rockchip_vpu981_av1_dec_tiles_reallocate
+ *   rockchip_vpu981_av1_tile_log2
+ *   round_power_of_two
+ *   set_buffer_cache_hints
+ *   set_queue_coherency
+ *   sev_pos
+ *   std_init_compound
+ *   std_validate_compound
+ *   std_validate_elem
+ *   user_flags
+ *   v4l2_buffer_get_timestamp
+ *   v4l2_buffer_set_timestamp
+ *   v4l2_ctrl_lock
+ *   v4l2_ctrl_request_clone
+ *   v4l2_ctrl_unlock
+ *   v4l2_ctrls_find_req_obj
+ *   v4l2_format_block_height
+ *   v4l2_format_block_width
+ *   v4l2_is_colorspace_valid
+ *   v4l2_is_hsv_enc_valid
+ *   v4l2_is_quant_valid
+ *   v4l2_is_xfer_func_valid
+ *   v4l2_is_ycbcr_enc_valid
+ *   v4l2_m2m_adjust_mem_offset
+ *   v4l2_m2m_buf_done
+ *   v4l2_m2m_clear_state
+ *   v4l2_m2m_dst_buf_is_last
+ *   v4l2_m2m_dst_buf_remove
+ *   v4l2_m2m_force_last_buf_done
+ *   v4l2_m2m_has_stopped
+ *   v4l2_m2m_is_last_draining_src_buf
+ *   v4l2_m2m_mark_stopped
+ *   v4l2_m2m_next_dst_buf
+ *   v4l2_m2m_next_src_buf
+ *   v4l2_m2m_schedule_next_job
+ *   v4l2_m2m_src_buf_remove
+ *   v4l_fill_fmtdesc
+ *   v4l_pix_format_touch
+ *   validate_av1_cdef
+ *   validate_av1_film_grain
+ *   validate_av1_frame
+ *   validate_av1_loop_filter
+ *   validate_av1_loop_restauration
+ *   validate_av1_quantization
+ *   validate_av1_segmentation
+ *   validate_av1_sequence
+ *   validate_ctrls
+ *   validate_new
+ *   validate_vp9_compressed_hdr
+ *   validate_vp9_frame
+ *   validate_vp9_lf_params
+ *   validate_vp9_quant_params
+ *   validate_vp9_seg_params
+ *   vb2_core_free_buffers_storage
+ *   vb2_dc_alloc_coherent
+ *   vb2_dc_alloc_non_coherent
+ *   vb2_dc_get_base_sgt
+ *   vb2_dc_get_contiguous_size
+ *   vb2_dma_contig_plane_dma_addr
+ *   vb2_fileio_is_active
+ *   vb2_fill_vb2_v4l2_buffer
+ *   vb2_get_buffer
+ *   vb2_get_drv_priv
+ *   vb2_get_num_buffers
+ *   vb2_get_plane_payload
+ *   vb2_is_busy
+ *   vb2_is_streaming
+ *   vb2_plane_size
+ *   vb2_queue_add_buffer
+ *   vb2_queue_allows_cache_hints
+ *   vb2_set_plane_payload
+ *   vb2_start_streaming_called
+ *   vb2_state_name
+ *   vb2_to_hantro_decoded_buf
+ *   vb2_warn_zero_bytesused
+ *   vdpu_read
+ *   vdpu_read_mask
+ *   vdpu_write
+ *   verify_coherency_flags
+ *   video_device_node_name
+ *   video_drvdata
+ *   video_get_drvdata
+ *   vidioc_enum_fmt
+ */
+
+BEGIN
+{
+    printf("Tracing functions... Hit Ctrl-C to view counts.\n");
+}
+
+kprobe:__buf_prepare
+{
+    @calls["__buf_prepare"] = count();
+}
+
+kprobe:__copy_timestamp
+{
+    @calls["__copy_timestamp"] = count();
+}
+
+kprobe:__enqueue_in_driver
+{
+    @calls["__enqueue_in_driver"] = count();
+}
+
+kprobe:__fill_v4l2_buffer
+{
+    @calls["__fill_v4l2_buffer"] = count();
+}
+
+kprobe:__fill_vb2_buffer
+{
+    @calls["__fill_vb2_buffer"] = count();
+}
+
+kprobe:__init_vb2_v4l2_buffer
+{
+    @calls["__init_vb2_v4l2_buffer"] = count();
+}
+
+kprobe:__prepare_dmabuf
+{
+    @calls["__prepare_dmabuf"] = count();
+}
+
+kprobe:__prepare_userptr
+{
+    @calls["__prepare_userptr"] = count();
+}
+
+kprobe:__v4l2_event_queue_fh
+{
+    @calls["__v4l2_event_queue_fh"] = count();
+}
+
+kprobe:__v4l2_m2m_try_queue
+{
+    @calls["__v4l2_m2m_try_queue"] = count();
+}
+
+kprobe:__vb2_buf_dmabuf_put
+{
+    @calls["__vb2_buf_dmabuf_put"] = count();
+}
+
+kprobe:__vb2_buf_mem_free
+{
+    @calls["__vb2_buf_mem_free"] = count();
+}
+
+kprobe:__vb2_queue_alloc
+{
+    @calls["__vb2_queue_alloc"] = count();
+}
+
+kprobe:__vb2_queue_cancel
+{
+    @calls["__vb2_queue_cancel"] = count();
+}
+
+kprobe:__vb2_queue_free
+{
+    @calls["__vb2_queue_free"] = count();
+}
+
+kprobe:__verify_planes_array
+{
+    @calls["__verify_planes_array"] = count();
+}
+
+kprobe:__verify_planes_array_core
+{
+    @calls["__verify_planes_array_core"] = count();
+}
+
+kprobe:_v4l2_m2m_job_finish
+{
+    @calls["_v4l2_m2m_job_finish"] = count();
+}
+
+kprobe:check_ext_ctrls
+{
+    @calls["check_ext_ctrls"] = count();
+}
+
+kprobe:check_fmt
+{
+    @calls["check_fmt"] = count();
+}
+
+kprobe:check_range
+{
+    @calls["check_range"] = count();
+}
+
+kprobe:cur_to_new
+{
+    @calls["cur_to_new"] = count();
+}
+
+kprobe:cur_to_req
+{
+    @calls["cur_to_req"] = count();
+}
+
+kprobe:device_run
+{
+    @calls["device_run"] = count();
+}
+
+kprobe:find_ref
+{
+    @calls["find_ref"] = count();
+}
+
+kprobe:find_ref_lock
+{
+    @calls["find_ref_lock"] = count();
+}
+
+kprobe:frame_vector_create
+{
+    @calls["frame_vector_create"] = count();
+}
+
+kprobe:frame_vector_destroy
+{
+    @calls["frame_vector_destroy"] = count();
+}
+
+kprobe:frame_vector_to_pages
+{
+    @calls["frame_vector_to_pages"] = count();
+}
+
+kprobe:frame_vector_to_pfns
+{
+    @calls["frame_vector_to_pfns"] = count();
+}
+
+kprobe:get_queue_ctx
+{
+    @calls["get_queue_ctx"] = count();
+}
+
+kprobe:get_vaddr_frames
+{
+    @calls["get_vaddr_frames"] = count();
+}
+
+kprobe:handler_new_ref
+{
+    @calls["handler_new_ref"] = count();
+}
+
+kprobe:hanto_postproc_enum_framesizes
+{
+    @calls["hanto_postproc_enum_framesizes"] = count();
+}
+
+kprobe:hantro_av1_s_ctrl
+{
+    @calls["hantro_av1_s_ctrl"] = count();
+}
+
+kprobe:hantro_buf_out_validate
+{
+    @calls["hantro_buf_out_validate"] = count();
+}
+
+kprobe:hantro_buf_prepare
+{
+    @calls["hantro_buf_prepare"] = count();
+}
+
+kprobe:hantro_buf_queue
+{
+    @calls["hantro_buf_queue"] = count();
+}
+
+kprobe:hantro_buf_request_complete
+{
+    @calls["hantro_buf_request_complete"] = count();
+}
+
+kprobe:hantro_end_prepare_run
+{
+    @calls["hantro_end_prepare_run"] = count();
+}
+
+kprobe:hantro_find_format
+{
+    @calls["hantro_find_format"] = count();
+}
+
+kprobe:hantro_get_ctrl
+{
+    @calls["hantro_get_ctrl"] = count();
+}
+
+kprobe:hantro_get_default_fmt
+{
+    @calls["hantro_get_default_fmt"] = count();
+}
+
+kprobe:hantro_get_format_depth
+{
+    @calls["hantro_get_format_depth"] = count();
+}
+
+kprobe:hantro_irq_done
+{
+    @calls["hantro_irq_done"] = count();
+}
+
+kprobe:hantro_needs_postproc
+{
+    @calls["hantro_needs_postproc"] = count();
+}
+
+kprobe:hantro_postproc_alloc
+{
+    @calls["hantro_postproc_alloc"] = count();
+}
+
+kprobe:hantro_postproc_buffer_size
+{
+    @calls["hantro_postproc_buffer_size"] = count();
+}
+
+kprobe:hantro_postproc_disable
+{
+    @calls["hantro_postproc_disable"] = count();
+}
+
+kprobe:hantro_postproc_enable
+{
+    @calls["hantro_postproc_enable"] = count();
+}
+
+kprobe:hantro_postproc_free
+{
+    @calls["hantro_postproc_free"] = count();
+}
+
+kprobe:hantro_postproc_get_dec_buf_addr
+{
+    @calls["hantro_postproc_get_dec_buf_addr"] = count();
+}
+
+kprobe:hantro_postproc_init
+{
+    @calls["hantro_postproc_init"] = count();
+}
+
+kprobe:hantro_queue_setup
+{
+    @calls["hantro_queue_setup"] = count();
+}
+
+kprobe:hantro_reset_raw_fmt
+{
+    @calls["hantro_reset_raw_fmt"] = count();
+}
+
+kprobe:hantro_set_fmt_cap
+{
+    @calls["hantro_set_fmt_cap"] = count();
+}
+
+kprobe:hantro_set_fmt_out
+{
+    @calls["hantro_set_fmt_out"] = count();
+}
+
+kprobe:hantro_start_prepare_run
+{
+    @calls["hantro_start_prepare_run"] = count();
+}
+
+kprobe:hantro_start_streaming
+{
+    @calls["hantro_start_streaming"] = count();
+}
+
+kprobe:hantro_stop_streaming
+{
+    @calls["hantro_stop_streaming"] = count();
+}
+
+kprobe:hantro_try_ctrl
+{
+    @calls["hantro_try_ctrl"] = count();
+}
+
+kprobe:hantro_try_fmt
+{
+    @calls["hantro_try_fmt"] = count();
+}
+
+kprobe:new_to_cur
+{
+    @calls["new_to_cur"] = count();
+}
+
+kprobe:new_to_req
+{
+    @calls["new_to_req"] = count();
+}
+
+kprobe:prepare_ext_ctrls
+{
+    @calls["prepare_ext_ctrls"] = count();
+}
+
+kprobe:ptr_to_user
+{
+    @calls["ptr_to_user"] = count();
+}
+
+kprobe:put_vaddr_frames
+{
+    @calls["put_vaddr_frames"] = count();
+}
+
+kprobe:req_alloc_array
+{
+    @calls["req_alloc_array"] = count();
+}
+
+kprobe:req_to_new
+{
+    @calls["req_to_new"] = count();
+}
+
+kprobe:rockchip_av1_default_coeff_probs
+{
+    @calls["rockchip_av1_default_coeff_probs"] = count();
+}
+
+kprobe:rockchip_av1_generate_chroma_grain_block
+{
+    @calls["rockchip_av1_generate_chroma_grain_block"] = count();
+}
+
+kprobe:rockchip_av1_generate_luma_grain_block
+{
+    @calls["rockchip_av1_generate_luma_grain_block"] = count();
+}
+
+kprobe:rockchip_av1_get_cdfs
+{
+    @calls["rockchip_av1_get_cdfs"] = count();
+}
+
+kprobe:rockchip_av1_set_default_cdfs
+{
+    @calls["rockchip_av1_set_default_cdfs"] = count();
+}
+
+kprobe:rockchip_av1_store_cdfs
+{
+    @calls["rockchip_av1_store_cdfs"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_done
+{
+    @calls["rockchip_vpu981_av1_dec_done"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_exit
+{
+    @calls["rockchip_vpu981_av1_dec_exit"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_get_dist
+{
+    @calls["rockchip_vpu981_av1_dec_get_dist"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_init
+{
+    @calls["rockchip_vpu981_av1_dec_init"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_is_lossless
+{
+    @calls["rockchip_vpu981_av1_dec_is_lossless"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_prepare_run
+{
+    @calls["rockchip_vpu981_av1_dec_prepare_run"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_run
+{
+    @calls["rockchip_vpu981_av1_dec_run"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_cdef
+{
+    @calls["rockchip_vpu981_av1_dec_set_cdef"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_fgs
+{
+    @calls["rockchip_vpu981_av1_dec_set_fgs"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_loopfilter
+{
+    @calls["rockchip_vpu981_av1_dec_set_loopfilter"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_other_frames
+{
+    @calls["rockchip_vpu981_av1_dec_set_other_frames"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_parameters
+{
+    @calls["rockchip_vpu981_av1_dec_set_parameters"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_ref
+{
+    @calls["rockchip_vpu981_av1_dec_set_ref"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_segmentation
+{
+    @calls["rockchip_vpu981_av1_dec_set_segmentation"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_sign_bias
+{
+    @calls["rockchip_vpu981_av1_dec_set_sign_bias"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_superres_params
+{
+    @calls["rockchip_vpu981_av1_dec_set_superres_params"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_set_tile_info
+{
+    @calls["rockchip_vpu981_av1_dec_set_tile_info"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_tiles_free
+{
+    @calls["rockchip_vpu981_av1_dec_tiles_free"] = count();
+}
+
+kprobe:rockchip_vpu981_av1_dec_update_prob
+{
+    @calls["rockchip_vpu981_av1_dec_update_prob"] = count();
+}
+
+kprobe:rockchip_vpu981_get_frame_index
+{
+    @calls["rockchip_vpu981_get_frame_index"] = count();
+}
+
+kprobe:rockchip_vpu981_get_order_hint
+{
+    @calls["rockchip_vpu981_get_order_hint"] = count();
+}
+
+kprobe:rockchip_vpu981_postproc_disable
+{
+    @calls["rockchip_vpu981_postproc_disable"] = count();
+}
+
+kprobe:rockchip_vpu981_postproc_enable
+{
+    @calls["rockchip_vpu981_postproc_enable"] = count();
+}
+
+kprobe:send_event
+{
+    @calls["send_event"] = count();
+}
+
+kprobe:try_or_set_cluster
+{
+    @calls["try_or_set_cluster"] = count();
+}
+
+kprobe:try_set_ext_ctrls
+{
+    @calls["try_set_ext_ctrls"] = count();
+}
+
+kprobe:try_set_ext_ctrls_common
+{
+    @calls["try_set_ext_ctrls_common"] = count();
+}
+
+kprobe:try_set_ext_ctrls_request
+{
+    @calls["try_set_ext_ctrls_request"] = count();
+}
+
+kprobe:update_from_auto_cluster
+{
+    @calls["update_from_auto_cluster"] = count();
+}
+
+kprobe:user_to_new
+{
+    @calls["user_to_new"] = count();
+}
+
+kprobe:v4l2_apply_frmsize_constraints
+{
+    @calls["v4l2_apply_frmsize_constraints"] = count();
+}
+
+kprobe:v4l2_ctrl_fill
+{
+    @calls["v4l2_ctrl_fill"] = count();
+}
+
+kprobe:v4l2_ctrl_find
+{
+    @calls["v4l2_ctrl_find"] = count();
+}
+
+kprobe:v4l2_ctrl_get_name
+{
+    @calls["v4l2_ctrl_get_name"] = count();
+}
+
+kprobe:v4l2_ctrl_handler_free
+{
+    @calls["v4l2_ctrl_handler_free"] = count();
+}
+
+kprobe:v4l2_ctrl_handler_free_request
+{
+    @calls["v4l2_ctrl_handler_free_request"] = count();
+}
+
+kprobe:v4l2_ctrl_handler_init_class
+{
+    @calls["v4l2_ctrl_handler_init_class"] = count();
+}
+
+kprobe:v4l2_ctrl_handler_init_request
+{
+    @calls["v4l2_ctrl_handler_init_request"] = count();
+}
+
+kprobe:v4l2_ctrl_new
+{
+    @calls["v4l2_ctrl_new"] = count();
+}
+
+kprobe:v4l2_ctrl_new_std
+{
+    @calls["v4l2_ctrl_new_std"] = count();
+}
+
+kprobe:v4l2_ctrl_request_bind
+{
+    @calls["v4l2_ctrl_request_bind"] = count();
+}
+
+kprobe:v4l2_ctrl_request_complete
+{
+    @calls["v4l2_ctrl_request_complete"] = count();
+}
+
+kprobe:v4l2_ctrl_request_setup
+{
+    @calls["v4l2_ctrl_request_setup"] = count();
+}
+
+kprobe:v4l2_ctrl_request_unbind
+{
+    @calls["v4l2_ctrl_request_unbind"] = count();
+}
+
+kprobe:v4l2_ctrl_type_op_equal
+{
+    @calls["v4l2_ctrl_type_op_equal"] = count();
+}
+
+kprobe:v4l2_ctrl_type_op_init
+{
+    @calls["v4l2_ctrl_type_op_init"] = count();
+}
+
+kprobe:v4l2_ctrl_type_op_validate
+{
+    @calls["v4l2_ctrl_type_op_validate"] = count();
+}
+
+kprobe:v4l2_event_queue_fh
+{
+    @calls["v4l2_event_queue_fh"] = count();
+}
+
+kprobe:v4l2_event_subscribed
+{
+    @calls["v4l2_event_subscribed"] = count();
+}
+
+kprobe:v4l2_fill_pixfmt_mp
+{
+    @calls["v4l2_fill_pixfmt_mp"] = count();
+}
+
+kprobe:v4l2_format_info
+{
+    @calls["v4l2_format_info"] = count();
+}
+
+kprobe:v4l2_m2m_buf_copy_metadata
+{
+    @calls["v4l2_m2m_buf_copy_metadata"] = count();
+}
+
+kprobe:v4l2_m2m_buf_done_and_job_finish
+{
+    @calls["v4l2_m2m_buf_done_and_job_finish"] = count();
+}
+
+kprobe:v4l2_m2m_buf_queue
+{
+    @calls["v4l2_m2m_buf_queue"] = count();
+}
+
+kprobe:v4l2_m2m_buf_remove
+{
+    @calls["v4l2_m2m_buf_remove"] = count();
+}
+
+kprobe:v4l2_m2m_cancel_job
+{
+    @calls["v4l2_m2m_cancel_job"] = count();
+}
+
+kprobe:v4l2_m2m_dqbuf
+{
+    @calls["v4l2_m2m_dqbuf"] = count();
+}
+
+kprobe:v4l2_m2m_expbuf
+{
+    @calls["v4l2_m2m_expbuf"] = count();
+}
+
+kprobe:v4l2_m2m_get_curr_priv
+{
+    @calls["v4l2_m2m_get_curr_priv"] = count();
+}
+
+kprobe:v4l2_m2m_get_vq
+{
+    @calls["v4l2_m2m_get_vq"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_dqbuf
+{
+    @calls["v4l2_m2m_ioctl_dqbuf"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_expbuf
+{
+    @calls["v4l2_m2m_ioctl_expbuf"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_qbuf
+{
+    @calls["v4l2_m2m_ioctl_qbuf"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_querybuf
+{
+    @calls["v4l2_m2m_ioctl_querybuf"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_reqbufs
+{
+    @calls["v4l2_m2m_ioctl_reqbufs"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_streamoff
+{
+    @calls["v4l2_m2m_ioctl_streamoff"] = count();
+}
+
+kprobe:v4l2_m2m_ioctl_streamon
+{
+    @calls["v4l2_m2m_ioctl_streamon"] = count();
+}
+
+kprobe:v4l2_m2m_last_buffer_done
+{
+    @calls["v4l2_m2m_last_buffer_done"] = count();
+}
+
+kprobe:v4l2_m2m_next_buf
+{
+    @calls["v4l2_m2m_next_buf"] = count();
+}
+
+kprobe:v4l2_m2m_qbuf
+{
+    @calls["v4l2_m2m_qbuf"] = count();
+}
+
+kprobe:v4l2_m2m_querybuf
+{
+    @calls["v4l2_m2m_querybuf"] = count();
+}
+
+kprobe:v4l2_m2m_reqbufs
+{
+    @calls["v4l2_m2m_reqbufs"] = count();
+}
+
+kprobe:v4l2_m2m_streamoff
+{
+    @calls["v4l2_m2m_streamoff"] = count();
+}
+
+kprobe:v4l2_m2m_streamon
+{
+    @calls["v4l2_m2m_streamon"] = count();
+}
+
+kprobe:v4l2_m2m_try_run
+{
+    @calls["v4l2_m2m_try_run"] = count();
+}
+
+kprobe:v4l2_m2m_try_schedule
+{
+    @calls["v4l2_m2m_try_schedule"] = count();
+}
+
+kprobe:v4l2_m2m_update_start_streaming_state
+{
+    @calls["v4l2_m2m_update_start_streaming_state"] = count();
+}
+
+kprobe:v4l2_m2m_update_stop_streaming_state
+{
+    @calls["v4l2_m2m_update_stop_streaming_state"] = count();
+}
+
+kprobe:v4l2_query_ext_ctrl
+{
+    @calls["v4l2_query_ext_ctrl"] = count();
+}
+
+kprobe:v4l2_s_ext_ctrls
+{
+    @calls["v4l2_s_ext_ctrls"] = count();
+}
+
+kprobe:v4l_enable_media_source
+{
+    @calls["v4l_enable_media_source"] = count();
+}
+
+kprobe:v4l_sanitize_colorspace
+{
+    @calls["v4l_sanitize_colorspace"] = count();
+}
+
+kprobe:v4l_sanitize_format
+{
+    @calls["v4l_sanitize_format"] = count();
+}
+
+kprobe:vb2_buffer_done
+{
+    @calls["vb2_buffer_done"] = count();
+}
+
+kprobe:vb2_buffer_in_use
+{
+    @calls["vb2_buffer_in_use"] = count();
+}
+
+kprobe:vb2_core_allocated_buffers_storage
+{
+    @calls["vb2_core_allocated_buffers_storage"] = count();
+}
+
+kprobe:vb2_core_dqbuf
+{
+    @calls["vb2_core_dqbuf"] = count();
+}
+
+kprobe:vb2_core_expbuf
+{
+    @calls["vb2_core_expbuf"] = count();
+}
+
+kprobe:vb2_core_qbuf
+{
+    @calls["vb2_core_qbuf"] = count();
+}
+
+kprobe:vb2_core_querybuf
+{
+    @calls["vb2_core_querybuf"] = count();
+}
+
+kprobe:vb2_core_reqbufs
+{
+    @calls["vb2_core_reqbufs"] = count();
+}
+
+kprobe:vb2_core_streamoff
+{
+    @calls["vb2_core_streamoff"] = count();
+}
+
+kprobe:vb2_core_streamon
+{
+    @calls["vb2_core_streamon"] = count();
+}
+
+kprobe:vb2_create_framevec
+{
+    @calls["vb2_create_framevec"] = count();
+}
+
+kprobe:vb2_dc_alloc
+{
+    @calls["vb2_dc_alloc"] = count();
+}
+
+kprobe:vb2_dc_attach_dmabuf
+{
+    @calls["vb2_dc_attach_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_cookie
+{
+    @calls["vb2_dc_cookie"] = count();
+}
+
+kprobe:vb2_dc_detach_dmabuf
+{
+    @calls["vb2_dc_detach_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_finish
+{
+    @calls["vb2_dc_finish"] = count();
+}
+
+kprobe:vb2_dc_get_dmabuf
+{
+    @calls["vb2_dc_get_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_get_userptr
+{
+    @calls["vb2_dc_get_userptr"] = count();
+}
+
+kprobe:vb2_dc_map_dmabuf
+{
+    @calls["vb2_dc_map_dmabuf"] = count();
+}
+
+kprobe:vb2_dc_num_users
+{
+    @calls["vb2_dc_num_users"] = count();
+}
+
+kprobe:vb2_dc_prepare
+{
+    @calls["vb2_dc_prepare"] = count();
+}
+
+kprobe:vb2_dc_put
+{
+    @calls["vb2_dc_put"] = count();
+}
+
+kprobe:vb2_dc_put_userptr
+{
+    @calls["vb2_dc_put_userptr"] = count();
+}
+
+kprobe:vb2_dc_unmap_dmabuf
+{
+    @calls["vb2_dc_unmap_dmabuf"] = count();
+}
+
+kprobe:vb2_destroy_framevec
+{
+    @calls["vb2_destroy_framevec"] = count();
+}
+
+kprobe:vb2_dqbuf
+{
+    @calls["vb2_dqbuf"] = count();
+}
+
+kprobe:vb2_expbuf
+{
+    @calls["vb2_expbuf"] = count();
+}
+
+kprobe:vb2_ops_wait_finish
+{
+    @calls["vb2_ops_wait_finish"] = count();
+}
+
+kprobe:vb2_ops_wait_prepare
+{
+    @calls["vb2_ops_wait_prepare"] = count();
+}
+
+kprobe:vb2_plane_cookie
+{
+    @calls["vb2_plane_cookie"] = count();
+}
+
+kprobe:vb2_qbuf
+{
+    @calls["vb2_qbuf"] = count();
+}
+
+kprobe:vb2_querybuf
+{
+    @calls["vb2_querybuf"] = count();
+}
+
+kprobe:vb2_queue_or_prepare_buf
+{
+    @calls["vb2_queue_or_prepare_buf"] = count();
+}
+
+kprobe:vb2_queue_remove_buffer
+{
+    @calls["vb2_queue_remove_buffer"] = count();
+}
+
+kprobe:vb2_req_unbind
+{
+    @calls["vb2_req_unbind"] = count();
+}
+
+kprobe:vb2_reqbufs
+{
+    @calls["vb2_reqbufs"] = count();
+}
+
+kprobe:vb2_set_flags_and_caps
+{
+    @calls["vb2_set_flags_and_caps"] = count();
+}
+
+kprobe:vb2_start_streaming
+{
+    @calls["vb2_start_streaming"] = count();
+}
+
+kprobe:vb2_streamoff
+{
+    @calls["vb2_streamoff"] = count();
+}
+
+kprobe:vb2_streamon
+{
+    @calls["vb2_streamon"] = count();
+}
+
+kprobe:vb2_verify_memory_type
+{
+    @calls["vb2_verify_memory_type"] = count();
+}
+
+kprobe:video_devdata
+{
+    @calls["video_devdata"] = count();
+}
+
+kprobe:vidioc_enum_fmt_vid_cap
+{
+    @calls["vidioc_enum_fmt_vid_cap"] = count();
+}
+
+kprobe:vidioc_enum_fmt_vid_out
+{
+    @calls["vidioc_enum_fmt_vid_out"] = count();
+}
+
+kprobe:vidioc_enum_framesizes
+{
+    @calls["vidioc_enum_framesizes"] = count();
+}
+
+kprobe:vidioc_g_fmt_cap_mplane
+{
+    @calls["vidioc_g_fmt_cap_mplane"] = count();
+}
+
+kprobe:vidioc_g_fmt_out_mplane
+{
+    @calls["vidioc_g_fmt_out_mplane"] = count();
+}
+
+kprobe:vidioc_querycap
+{
+    @calls["vidioc_querycap"] = count();
+}
+
+kprobe:vidioc_s_fmt_cap_mplane
+{
+    @calls["vidioc_s_fmt_cap_mplane"] = count();
+}
+
+kprobe:vidioc_s_fmt_out_mplane
+{
+    @calls["vidioc_s_fmt_out_mplane"] = count();
+}
+

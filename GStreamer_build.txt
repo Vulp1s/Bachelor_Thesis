@@ -1,0 +1,21 @@
+\subsection{GStreamer 1.24.11 Build}
+\label{code:gstreamer-build}
+
+All GStreamer components were built from source to ensure ABI compatibility and support for the \texttt{v4l2slav1dec} element. 
+For each of the four core packages (\texttt{gstreamer}, \texttt{gst-plugins-base}, \texttt{good}, and \texttt{bad}), the following build sequence was executed from the respective source directory:
+
+\begin{lstlisting}[language=bash, caption={Meson build process}]
+meson setup build --prefix=/usr/local --wrap-mode=nofallback -Dauto_features=disabled [FLAGS]
+ninja -C build -j$(nproc)
+sudo ninja -C build install
+sudo ldconfig
+\end{lstlisting}\label{code:meson_build}
+
+The specific \texttt{[FLAGS]} used for each package are detailed below:
+
+\begin{itemize}
+    \item \textbf{Core:} No additional flags.
+    \item \textbf{Base:} \texttt{-Dvideoconvertscale=enabled -Daudioconvert=enabled -Dtypefind=enabled -Dplayback=enabled -Dapp=enabled -Dpbtypes=enabled}
+    \item \textbf{Good:} \texttt{-Disomp4=enabled -Dautodetect=enabled}
+    \item \textbf{Bad:} \texttt{-Dv4l2codecs=enabled -Dvideoparsers=enabled}
+\end{itemize}\label{code:meson_flags}

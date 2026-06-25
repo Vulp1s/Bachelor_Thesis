@@ -274,9 +274,6 @@ where
 
 select
   direction                                       as flow_direction,
-  source.getFunction().getName()                  as source_function,
-  sink.getFunction().getName()                    as sink_function,
   touchedStruct.getName()                         as struct_name,
-  accessType                                      as access_type,
-  sink.getFunction().getFile().getBaseName()      as file
-order by flow_direction, struct_name, source_function
+  accessType                                      as access_type
+order by flow_direction, struct_name
