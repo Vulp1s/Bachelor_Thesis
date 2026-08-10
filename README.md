@@ -13,6 +13,30 @@ with eBPF/kprobe runtime confirmation to produce a minimal, verified dependency 
 
 ---
 
+## Repo Structure
+The repository is organized as follows:
+
+**manual_trace_reqbufs.md**: The complete manual call graph trace for VIDIOC_REQBUFS,
+serving as the ground truth used to bootstrap and validate the static analysis
+(Section 3.2).
+
+**ql_queries/** All CodeQL queries and the hantro_lib library developed during this
+work, including the recursive call graph query, the struct access queries, and
+the Discovery query used to drive automated probe generation. Raw query
+outputs are provided in *ql_queries/query_output/*.
+
+**bpf_trace/** The Python bpftrace script generator (gen_bpf.py), the extended
+generator script (gen_bpf2.py) and all generated probe scripts, together with
+the raw bpftrace output collected during the 307-frame AV1 decode session on
+the Rock 5B.
+
+**strace_output/** The raw strace logs captured during the GStreamer decode ses-
+sion, used to identify the ioctl entry points analyzed in Chapter 3.
+graphs/ Call graph visualizations generated from the CodeQL output, including the
+layered architecture diagram and the annotated VIDIOC_REQBUFS call graph
+
+---
+
 ## Target Hardware
 
 | Component     | Details                                        |
